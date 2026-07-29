@@ -1,6 +1,6 @@
 # WRTPKILL Administrator Guide / 管理员配置说明
 
-Version `1.2.2` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
+Version `1.2.3` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 
 ## English
 
@@ -52,7 +52,7 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 5. When offline cleanup triggers, inventory and Ender Chest are cleared, the player returns to spawn, and the teleport lock is removed.
 6. `/nopos` stores persistent privacy state. Administrators can still see hidden players and receive a hidden marker.
 7. The updater compares semantic versions from GitHub Releases. It selects `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` according to the active language, saves it under the running plugin JAR's filename in the update directory, and requires a restart to apply it.
-8. Startup, shutdown, and updater statuses share one colored `[WRTPKILL]` console prefix. The banner uses an inner width of 60 visible console columns with complete cyan left/right borders; updater states use aqua, green, yellow, or red according to their result.
+8. Startup, shutdown, and updater statuses share one colored `[WRTPKILL]` console prefix. The banner uses an inner width of 76 visible console columns, a centered bilingual control header, a dashed section divider, and complete cyan left/right borders; updater states use aqua, green, yellow, or red according to their result.
 9. Every in-game component is recursively forced bold after legacy colors are parsed, including help, dynamic help, TPA buttons and hover text, and position gradients.
 10. Non-help divider panels remove manual indentation and center each line after placeholder replacement against the divider's middle star. Help menus intentionally keep their list layout.
 
@@ -124,7 +124,7 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 5. 离线清理触发后会清空背包和末影箱、返回复活点并解除传送锁。
 6. `/nopos` 使用持久数据保存隐藏状态；管理员仍可看到隐藏玩家并收到隐藏标记。
 7. 更新器按语义版本比较 GitHub Release，根据当前语言选择 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`，沿用正在运行的插件 JAR 文件名保存到更新目录，重启后应用。
-8. 启动、卸载和更新器状态统一使用彩色 `[WRTPKILL]` 后台前缀；横幅采用 60 个可见控制台列的内部宽度并补全青色左右边框，更新状态按结果使用青、绿、黄或红色。
+8. 启动、卸载和更新器状态统一使用彩色 `[WRTPKILL]` 后台前缀；横幅采用 76 个可见控制台列的内部宽度，并包含居中双语管理标题、虚线区段分隔和完整青色左右边框；更新状态按结果使用青、绿、黄或红色。
 
 9. 所有游戏内组件在解析颜色后都会递归强制加粗，包括帮助、动态帮助、TPA 按钮及悬停说明和坐标渐变。
 10. 除帮助外，分割线面板会先移除手工缩进，在替换动态变量后以分割线中央星星为基准逐行居中；帮助菜单保留列表排版。

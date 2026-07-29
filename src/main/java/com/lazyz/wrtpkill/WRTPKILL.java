@@ -117,6 +117,9 @@ public class WRTPKILL extends JavaPlugin {
         logConsole(StartupBannerLayout.border());
         logConsole(StartupBannerLayout.centeredLine(
                 "&b&lWRTPKILL TELEPORT MANAGEMENT v" + version));
+        logConsole(StartupBannerLayout.centeredLine(
+                "&f&lTELEPORT & RESPAWN CONTROL &8/ &f&l传送与复活管理"));
+        logConsole(StartupBannerLayout.sectionDivider());
         logConsole(StartupBannerLayout.line("&fVersion / 版本 &8: &a" + version));
         logConsole(StartupBannerLayout.line("&fAuthor  / 作者 &8: &eLazyz"));
         logConsole(StartupBannerLayout.line(

@@ -3,7 +3,7 @@ package com.lazyz.wrtpkill;
 import java.util.regex.Pattern;
 
 final class StartupBannerLayout {
-    static final int INNER_WIDTH = 60;
+    static final int INNER_WIDTH = 76;
     private static final String BORDER_STYLE = "&3&l";
     private static final Pattern FORMATTING_CODE =
             Pattern.compile("(?i)&(?:#[0-9a-f]{6}|[0-9a-fk-orx])");
@@ -14,6 +14,10 @@ final class StartupBannerLayout {
     static String border() {
         return BORDER_STYLE + "+" + "=".repeat(INNER_WIDTH) + "+";
     }
+    static String sectionDivider() {
+        return BORDER_STYLE + "+" + "-".repeat(INNER_WIDTH) + "+";
+    }
+
 
     static String line(String content) {
         int rightPadding = Math.max(1,

@@ -13,8 +13,11 @@ class StartupBannerLayoutTest {
         List<String> lines = List.of(
                 StartupBannerLayout.border(),
                 StartupBannerLayout.centeredLine(
-                        "&b&lWRTPKILL TELEPORT MANAGEMENT v1.2.2"),
-                StartupBannerLayout.line("&fVersion / 版本 &8: &a1.2.2"),
+                        "&b&lWRTPKILL TELEPORT MANAGEMENT v1.2.3"),
+                StartupBannerLayout.centeredLine(
+                        "&f&lTELEPORT & RESPAWN CONTROL &8/ &f&l传送与复活管理"),
+                StartupBannerLayout.sectionDivider(),
+                StartupBannerLayout.line("&fVersion / 版本 &8: &a1.2.3"),
                 StartupBannerLayout.line("&fAuthor  / 作者 &8: &eLazyz"),
                 StartupBannerLayout.line(
                         "&fTested  / 测试 &8: &aPaper & Folia 1.21.11"),
@@ -30,9 +33,9 @@ class StartupBannerLayoutTest {
         }
         assertEquals(4, StartupBannerLayout.visibleWidth("&f\u7248\u672c"));
 
-        assertTrue(lines.getFirst().endsWith("+"));
-        for (String detailLine : lines.subList(1, lines.size())) {
-            assertTrue(detailLine.endsWith("&3&l|"));
+        for (int index = 0; index < lines.size(); index++) {
+            String expectedSuffix = index == 0 || index == 3 ? "+" : "&3&l|";
+            assertTrue(lines.get(index).endsWith(expectedSuffix));
         }
     }
 }

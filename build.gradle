@@ -7,7 +7,7 @@ def pluginName = "WRTPKILL"
 def pluginAuthor = "Lazyz"
 
 group = pluginGroup
-version = '1.2.2'
+version = '1.2.3'
 
 def releaseNotesVersion = providers.gradleProperty('releaseVersion').getOrElse(version.toString())
 def releaseNoticeFile = layout.projectDirectory.file('RELEASE_NOTICE.md')

@@ -4,6 +4,24 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.2.3] - 2026-07-30
+
+### English
+
+#### Changed
+
+- Added a centered bilingual control subtitle beneath the startup-banner title.
+- Added a full-width dashed divider between the new header and plugin detail rows, and expanded the inner width from 60 to 76 visible console columns.
+- Extended banner regression coverage and updated project version labels to `1.2.3`.
+
+### 中文
+
+#### 调整
+
+- 在启动横幅主标题下新增居中的双语管理副标题。
+- 在新顶部标题区与插件详情之间新增全宽虚线分隔，并将内部宽度从 60 扩展至 76 个可见控制台列。
+- 扩展横幅回归测试，并将项目版本标识更新为 `1.2.3`。
+
 ## [1.2.2] - 2026-07-30
 
 ### English
@@ -208,6 +226,7 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.2.3]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.3
 [1.2.2]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.2
 [1.2.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.1
 [1.2.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.0
