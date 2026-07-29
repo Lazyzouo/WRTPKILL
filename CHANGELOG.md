@@ -4,6 +4,24 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.1.1] - 2026-07-29
+
+### English
+
+#### Changed
+
+- GitHub Releases now provide only `en.us.jar` and `zh.cn.jar` as uploaded assets; versioned JARs, configuration presets, and checksum files are no longer attached.
+- Both language packages contain the complete compiled plugin resources and configuration comments. The English package changes only the official default language from `zh_CN` to `en_US`.
+- Automatic updates now select the package matching the server's configured language and stage it under the running plugin JAR's filename for replacement on restart.
+
+### 中文
+
+#### 调整
+
+- GitHub Release 上传资源现仅保留 `en.us.jar` 与 `zh.cn.jar`；不再附加带版本号 JAR、配置预设与校验和文件。
+- 两个语言包都保留完整的已编译插件资源与配置注释；英文包只把官方默认语言由 `zh_CN` 改为 `en_US`。
+- 自动更新会按服务器当前配置语言选择对应安装包，并沿用正在运行的插件 JAR 文件名暂存，待重启后替换。
+
 ## [1.1.0] - 2026-07-29
 
 ### English
@@ -56,4 +74,5 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.1.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.1
 [1.1.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.0

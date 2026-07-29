@@ -20,7 +20,8 @@ public final class UpdateChecker {
     public static final String REPOSITORY_URL = "https://github.com/Lazyzouo/WRTPKILL";
     private static final URI LATEST_RELEASE_API = URI.create(
             "https://api.github.com/repos/Lazyzouo/WRTPKILL/releases/latest");
-    private static final String STABLE_ASSET_NAME = "WRTPKILL.jar";
+    private static final String ENGLISH_ASSET_NAME = "en.us.jar";
+    private static final String CHINESE_ASSET_NAME = "zh.cn.jar";
 
     private final WRTPKILL plugin;
     private final HttpClient httpClient = HttpClient.newBuilder()
@@ -68,8 +69,11 @@ public final class UpdateChecker {
                 return;
             }
 
-            URI assetUri = findStableAsset(release.getAsJsonArray("assets"));
-            if (assetUri == null) throw new IOException("Release asset " + STABLE_ASSET_NAME + " is missing");
+            String assetName = plugin.getLanguageManager().isEnglish()
+                    ? ENGLISH_ASSET_NAME
+                    : CHINESE_ASSET_NAME;
+            URI assetUri = findAsset(release.getAsJsonArray("assets"), assetName);
+            if (assetUri == null) throw new IOException("Release asset " + assetName + " is missing");
             download(assetUri, latestVersion);
         } catch (Exception exception) {
             plugin.getLogger().warning("Update check/download failed: " + exception.getMessage());
@@ -77,11 +81,11 @@ public final class UpdateChecker {
         }
     }
 
-    private URI findStableAsset(JsonArray assets) {
+    private URI findAsset(JsonArray assets, String assetName) {
         if (assets == null) return null;
         for (JsonElement element : assets) {
             JsonObject asset = element.getAsJsonObject();
-            if (STABLE_ASSET_NAME.equals(asset.get("name").getAsString())) {
+            if (assetName.equals(asset.get("name").getAsString())) {
                 return URI.create(asset.get("browser_download_url").getAsString());
             }
         }
@@ -104,7 +108,7 @@ public final class UpdateChecker {
                 throw new IOException("Release download returned HTTP " + response.statusCode());
             }
 
-            Path target = updateDirectory.resolve(STABLE_ASSET_NAME);
+            Path target = updateDirectory.resolve(plugin.getPluginJarName());
             Files.move(temporaryFile, target, StandardCopyOption.REPLACE_EXISTING);
             log("Downloaded WRTPKILL " + latestVersion + " to " + target + ". Restart to apply it.",
                     "已下载 WRTPKILL " + latestVersion + " 至 " + target + "，重启服务器后生效。");

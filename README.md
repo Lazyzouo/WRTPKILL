@@ -16,7 +16,7 @@ WRTPKILL is a Folia-ready Paper plugin that combines multi-world random teleport
 | Tested/target Minecraft version | `1.21.11` |
 | Server software | Paper or Folia |
 | Java | 21 or newer |
-| Plugin version | `1.1.0` |
+| Plugin version | `1.1.1` |
 
 The project compiles against Paper API `1.21.11`. Compatibility with forks or older Minecraft versions is not guaranteed.
 
@@ -34,13 +34,12 @@ The project compiles against Paper API `1.21.11`. Compatibility with forks or ol
 
 ### Download and installation
 
-1. Download `WRTPKILL.jar` from the [latest release](https://github.com/Lazyzouo/WRTPKILL/releases/latest).
+1. Download `en.us.jar` from the [latest release](https://github.com/Lazyzouo/WRTPKILL/releases/latest). Use `zh.cn.jar` instead for a Simplified Chinese default installation.
 2. Place it in the server `plugins` directory.
 3. Start the server once to generate the configuration.
-4. Use the generated Chinese configuration, or download `config-en_US.yml`, rename it to `config.yml`, and place it in `plugins/WRTPKILL/`.
-5. Restart the server. Use `/wrtp help` in game.
+4. Restart the server. Use `/wrtp help` in game.
 
-The plugin never overwrites an existing runtime configuration or language file. Repository defaults contain only official example values; a server owner's private values live outside this source repository.
+Both packages contain the same complete code, resources, configuration comments, and official default parameters. They differ only in the default `language` value. The plugin never overwrites an existing runtime configuration or language file. Repository defaults contain only official example values; a server owner's private values live outside this source repository.
 
 ### Main commands
 
@@ -61,7 +60,7 @@ See [WRTPKILL.md](WRTPKILL.md) for all settings, behavior, limits, update rules,
 
 ### Automatic updates
 
-At startup, WRTPKILL checks the latest GitHub Release. If a newer semantic version exists and `updater.auto-download` is enabled, the stable `WRTPKILL.jar` asset is downloaded to the server update directory. The server must be restarted to apply it. Failures are reported in the console with the official release URL.
+At startup, WRTPKILL checks the latest GitHub Release. If a newer semantic version exists and `updater.auto-download` is enabled, it downloads `en.us.jar` or `zh.cn.jar` to match the configured language, then stages it under the running plugin JAR's filename in the update directory. The server must be restarted to apply it. Failures are reported in the console with the official release URL.
 
 ### Build from source
 
@@ -69,7 +68,7 @@ At startup, WRTPKILL checks the latest GitHub Release. If a newer semantic versi
 ./gradlew clean build
 ```
 
-The output is `build/libs/WRTPKILL-<version>.jar`. Do not publish a modified binary under the official project name without clearly identifying the fork.
+Release-ready outputs are `build/libs/en.us.jar` and `build/libs/zh.cn.jar`. Gradle also creates an internal versioned JAR, but the official GitHub Release attaches only the two language packages. Do not publish a modified binary under the official project name without clearly identifying the fork.
 
 ## 中文
 
@@ -82,7 +81,7 @@ WRTPKILL 是由 **Lazyz** 维护的 Paper/Folia 综合插件，整合多世界�
 | 测试/目标 Minecraft 版本 | `1.21.11` |
 | 服务端 | Paper 或 Folia |
 | Java | 21 或更高版本 |
-| 插件版本 | `1.1.0` |
+| 插件版本 | `1.1.1` |
 
 项目使用 Paper API `1.21.11` 编译；不保证兼容旧版 Minecraft 或所有第三方分支。
 
@@ -100,19 +99,18 @@ WRTPKILL 是由 **Lazyz** 维护的 Paper/Folia 综合插件，整合多世界�
 
 ### 下载与安装
 
-1. 从[最新 Release](https://github.com/Lazyzouo/WRTPKILL/releases/latest)下载 `WRTPKILL.jar`。
+1. 从[最新 Release](https://github.com/Lazyzouo/WRTPKILL/releases/latest)下载中文默认包 `zh.cn.jar`；需要英文默认配置时下载 `en.us.jar`。
 2. 放入服务端 `plugins` 目录。
 3. 启动一次服务器生成配置。
-4. 中文可直接使用默认配置；英文请下载 `config-en_US.yml`，改名为 `config.yml` 后放入 `plugins/WRTPKILL/`。
-5. 重启服务器，并在游戏内使用 `/wrtp help`。
+4. 重启服务器，并在游戏内使用 `/wrtp help`。
 
-插件不会覆盖现有运行配置或语言文件。仓库只保存官方示例参数，服主的私人参数位于服务器运行目录，不会因源码同步而上传。
+两个安装包包含完全相同的完整代码、资源、配置注释和官方默认参数，唯一差异是默认 `language` 值。插件不会覆盖现有运行配置或语言文件。仓库只保存官方示例参数，服主的私人参数位于服务器运行目录，不会因源码同步而上传。
 
 完整配置、逻辑、限制和运维说明见 [WRTPKILL.md](WRTPKILL.md)。
 
 ### 自动更新
 
-插件会在启动时检查 GitHub 最新 Release。若发现更高语义版本且 `updater.auto-download` 已开启，会把稳定资源 `WRTPKILL.jar` 下载到服务端更新目录；重启服务器后应用。失败时后台会显示官方 Release 地址供手动下载。
+插件会在启动时检查 GitHub 最新 Release。若发现更高语义版本且 `updater.auto-download` 已开启，会按当前配置语言选择 `en.us.jar` 或 `zh.cn.jar`，并沿用正在运行的插件 JAR 文件名暂存到更新目录；重启服务器后应用。失败时后台会显示官方 Release 地址供手动下载。
 
 ## License / 许可证
 

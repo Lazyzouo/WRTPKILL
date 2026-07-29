@@ -48,7 +48,7 @@ jobs:
         shell: bash
         run: grep -F "## [${{ steps.version.outputs.value }}]" CHANGELOG.md
 
-      - name: Build release JAR
+      - name: Build language JARs
         run: ./gradlew clean build --no-daemon
 
       - name: Prepare release assets and notes
@@ -56,14 +56,8 @@ jobs:
         run: |
           version="${{ steps.version.outputs.value }}"
           mkdir -p release
-          cp "build/libs/WRTPKILL-${version}.jar" "release/WRTPKILL-${version}.jar"
-          cp "build/libs/WRTPKILL-${version}.jar" "release/WRTPKILL.jar"
-          cp src/main/resources/config.yml release/config-zh_CN.yml
-          cp presets/config-en_US.yml release/config-en_US.yml
-          (
-            cd release
-            sha256sum WRTPKILL.jar "WRTPKILL-${version}.jar" config-zh_CN.yml config-en_US.yml > SHA256SUMS.txt
-          )
+          cp build/libs/en.us.jar release/en.us.jar
+          cp build/libs/zh.cn.jar release/zh.cn.jar
           awk -v version="$version" '
             $0 ~ "^## \\[" version "\\]" { found=1; next }
             found && /^## \[/ { exit }
@@ -83,10 +77,10 @@ jobs:
           else
             gh release create "$tag" --target "$GITHUB_SHA" --title "WRTPKILL ${tag}" --notes-file release-notes.md --latest
           fi
+          while IFS= read -r asset; do
+            gh release delete-asset "$tag" "$asset" --yes
+          done < <(gh release view "$tag" --json assets --jq '.assets[].name')
           gh release upload "$tag" \
-            release/WRTPKILL.jar \
-            "release/WRTPKILL-${version}.jar" \
-            release/config-zh_CN.yml \
-            release/config-en_US.yml \
-            release/SHA256SUMS.txt \
+            release/en.us.jar \
+            release/zh.cn.jar \
             --clobber

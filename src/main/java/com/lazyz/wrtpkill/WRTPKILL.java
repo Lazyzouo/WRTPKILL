@@ -100,6 +100,10 @@ public class WRTPKILL extends JavaPlugin {
         return languageManager;
     }
 
+    String getPluginJarName() {
+        return getFile().getName();
+    }
+
     public void reloadPluginConfiguration() {
         reloadConfig();
         languageManager.reload();

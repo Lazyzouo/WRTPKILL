@@ -7,7 +7,7 @@ def pluginName = "WRTPKILL"
 def pluginAuthor = "Lazyz"
 
 group = pluginGroup
-version = '1.1.0'
+version = '1.1.1'
 
 repositories {
     mavenCentral()
@@ -45,3 +45,42 @@ processResources {
         expand(props)
     }
 }
+
+tasks.register('chineseJar', Jar) {
+    dependsOn classes
+    archiveFileName = 'zh.cn.jar'
+    from sourceSets.main.output
+}
+
+def englishConfigFile = layout.buildDirectory.file('generated/english/config.yml')
+
+tasks.register('prepareEnglishConfig') {
+    inputs.file('src/main/resources/config.yml')
+    outputs.file(englishConfigFile)
+
+    doLast {
+        def chineseDefault = 'language: "zh_CN"'
+        def englishDefault = 'language: "en_US"'
+        def sourceConfig = file('src/main/resources/config.yml').getText('UTF-8')
+        if (sourceConfig.count(chineseDefault) != 1) {
+            throw new GradleException("Expected exactly one official language setting in config.yml")
+        }
+
+        def targetConfig = englishConfigFile.get().asFile
+        targetConfig.parentFile.mkdirs()
+        targetConfig.setText(sourceConfig.replace(chineseDefault, englishDefault), 'UTF-8')
+    }
+}
+
+tasks.register('englishJar', Jar) {
+    dependsOn classes, prepareEnglishConfig
+    archiveFileName = 'en.us.jar'
+    from(sourceSets.main.output) {
+        exclude 'config.yml'
+    }
+    from(englishConfigFile) {
+        into ''
+    }
+}
+
+assemble.dependsOn chineseJar, englishJar
