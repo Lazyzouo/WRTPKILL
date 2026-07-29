@@ -52,14 +52,13 @@ jobs:
       - name: Build language JARs
         run: ./gradlew clean build --no-daemon
 
-      - name: Prepare release assets and notes
+      - name: Verify immutable release assets and notes
         shell: bash
         run: |
-          mkdir -p release
-          cp build/libs/en.us.jar release/en.us.jar
-          cp build/libs/zh.cn.jar release/zh.cn.jar
-          cp build/release/release-notes.md release-notes.md
-          test -s release-notes.md
+          version="${{ steps.version.outputs.value }}"
+          test -s "build/libs/WRTPKILL-${version}-en.us.jar"
+          test -s "build/libs/WRTPKILL-${version}-zh.cn.jar"
+          test -s build/release/release-notes.md
 
       - name: Create or update GitHub Release
         env:
@@ -69,14 +68,14 @@ jobs:
           version="${{ steps.version.outputs.value }}"
           tag="v${version}"
           if gh release view "$tag" >/dev/null 2>&1; then
-            gh release edit "$tag" --title "WRTPKILL ${tag}" --notes-file release-notes.md --latest
+            gh release edit "$tag" --title "WRTPKILL ${tag}" --notes-file build/release/release-notes.md --latest
           else
-            gh release create "$tag" --target "$GITHUB_SHA" --title "WRTPKILL ${tag}" --notes-file release-notes.md --latest
+            gh release create "$tag" --target "$GITHUB_SHA" --title "WRTPKILL ${tag}" --notes-file build/release/release-notes.md --latest
           fi
           while IFS= read -r asset; do
             gh release delete-asset "$tag" "$asset" --yes
           done < <(gh release view "$tag" --json assets --jq '.assets[].name')
           gh release upload "$tag" \
-            release/en.us.jar \
-            release/zh.cn.jar \
+            "build/libs/WRTPKILL-${version}-en.us.jar" \
+            "build/libs/WRTPKILL-${version}-zh.cn.jar" \
             --clobber

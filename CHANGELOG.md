@@ -4,6 +4,40 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.2.0] - 2026-07-29
+
+### English
+
+#### Added
+
+- Versioned, language-specific Gradle artifacts using the immutable `WRTPKILL-<version>-<language>.jar` template.
+- A WRTPKILL-specific, Kitloader-inspired colored startup banner with version, author, tested platform, language, GitHub, and open-source transparency details.
+- Colored console states for update checking, disabled checks, latest version, available updates, manual downloads, successful downloads, failures, and plugin shutdown.
+- Unit coverage for exact English and Simplified Chinese Release asset names.
+
+#### Changed
+
+- The Release workflow now uploads the original Gradle outputs directly from `build/libs`; copying or renaming Release JARs is forbidden by workflow and maintenance policy.
+- The updater now resolves the exact versioned language asset from the latest Release while retaining the running plugin filename in the server update directory for restart replacement.
+- The Release catalog is reset to `v1.2.0`; earlier Releases and tags are retired after the new assets pass verification.
+- Project version and documentation compatibility labels updated to `1.2.0`.
+
+### 中文
+
+#### 新增
+
+- 新增使用固定 `WRTPKILL-<版本>-<语言>.jar` 模板的带版本号双语言 Gradle 产物。
+- 新增参考 Kitloader 但为 WRTPKILL 独立设计的彩色启动横幅，展示版本、作者、测试平台、语言、GitHub 与开源透明声明。
+- 为更新检查、检查关闭、已是最新、发现新版、手动下载、下载成功、下载失败和插件卸载新增不同颜色的后台状态提示。
+- 新增中英文 Release 资源准确文件名的单元测试。
+
+#### 调整
+
+- Release 工作流改为从 `build/libs` 直接上传 Gradle 原产物；工作流与维护规则均禁止复制或改名 Release JAR。
+- 更新器会从最新 Release 精确选择带版本号的对应语言资源，同时仍沿用当前插件文件名暂存到服务器更新目录，供重启替换。
+- Release 目录从 `v1.2.0` 重新作为保留基线；新版资源验证通过后移除更早的 Release 与标签。
+- 项目版本与文档兼容性标识更新为 `1.2.0`。
+
 ## [1.1.3] - 2026-07-29
 
 ### English
@@ -124,7 +158,4 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
-[1.1.3]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.3
-[1.1.2]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.2
-[1.1.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.1
-[1.1.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.0
+[1.2.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.0

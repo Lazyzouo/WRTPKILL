@@ -1,6 +1,6 @@
 # WRTPKILL Administrator Guide / 管理员配置说明
 
-Version `1.1.3` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
+Version `1.2.0` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 
 ## English
 
@@ -14,11 +14,11 @@ WRTPKILL does not replace a combat engine, arena ruleset, or anti-cheat plugin. 
 
 Official WRTPKILL builds contain no hidden backdoor or telemetry. Configuration, player state, coordinates, worlds, logs, and runtime records remain local to the server. The updater only reads public GitHub Release metadata and optionally downloads the selected official language JAR; it does not upload Minecraft server data. GitHub still receives ordinary HTTPS connection metadata such as the source IP address and the WRTPKILL version in the User-Agent header.
 
-The only official download page is `https://github.com/Lazyzouo/WRTPKILL/releases`. Install `en.us.jar` or `zh.cn.jar` from the required tagged Release. GitHub's automatic source archives are not plugin JARs. The complete statement is maintained in `RELEASE_NOTICE.md` and prepended to every Release.
+The only official download page is `https://github.com/Lazyzouo/WRTPKILL/releases`. Install `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` from the required tagged Release. GitHub's automatic source archives are not plugin JARs. The complete statement is maintained in `RELEASE_NOTICE.md` and prepended to every Release.
 
 ### Configuration ownership
 
-The repository's `src/main/resources/config.yml` contains official example values only. At runtime, Paper extracts it to `plugins/WRTPKILL/config.yml`. The `en.us.jar` and `zh.cn.jar` packages preserve the complete configuration and its comments; only their default `language` value differs. Existing runtime configuration and `plugins/WRTPKILL/lang/en_US.yml` are not overwritten during updates. Keep server-specific world names, coordinates, player names, and thresholds in the runtime copy, not in the source repository.
+The repository's `src/main/resources/config.yml` contains official example values only. At runtime, Paper extracts it to `plugins/WRTPKILL/config.yml`. The `WRTPKILL-<version>-en.us.jar` and `WRTPKILL-<version>-zh.cn.jar` packages preserve the complete configuration and its comments; only their default `language` value differs. Existing runtime configuration and `plugins/WRTPKILL/lang/en_US.yml` are not overwritten during updates. Keep server-specific world names, coordinates, player names, and thresholds in the runtime copy, not in the source repository.
 
 ### Settings
 
@@ -49,7 +49,8 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 4. Death clears that lock and displays one combined respawn/unlock panel. Death-related pending state survives delayed respawn and rejoin handling.
 5. When offline cleanup triggers, inventory and Ender Chest are cleared, the player returns to spawn, and the teleport lock is removed.
 6. `/nopos` stores persistent privacy state. Administrators can still see hidden players and receive a hidden marker.
-7. The updater compares semantic versions from GitHub Releases. It selects `en.us.jar` or `zh.cn.jar` according to the active language, saves it under the running plugin JAR's filename in the update directory, and requires a restart to apply it.
+7. The updater compares semantic versions from GitHub Releases. It selects `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` according to the active language, saves it under the running plugin JAR's filename in the update directory, and requires a restart to apply it.
+8. Startup, shutdown, and updater statuses share one colored `[WRTPKILL]` console prefix. The banner uses a consistent cyan palette; updater states use aqua, green, yellow, or red according to their result.
 
 ### Permissions and trust boundaries
 
@@ -64,7 +65,7 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 - Removing a dynamic RTP command from configuration stops it from functioning immediately, but the command label can remain in the server command map until restart.
 - TPA requests expire after a fixed 30 seconds.
 - The whitelist bypasses the lock check. A successful teleport can still leave a lock marker that will be bypassed while the player remains whitelisted.
-- Automatic updates require outbound HTTPS access to `api.github.com` and GitHub release assets. Each Release has exactly two manually uploaded packages, `en.us.jar` and `zh.cn.jar`; GitHub also exposes its unavoidable automatic source archives. The updater cannot replace the active JAR until server restart.
+- Automatic updates require outbound HTTPS access to `api.github.com` and GitHub release assets. Each Release has exactly two manually uploaded packages, `WRTPKILL-<version>-en.us.jar` and `WRTPKILL-<version>-zh.cn.jar`; GitHub also exposes its unavoidable automatic source archives. Release JARs are uploaded directly from Gradle output and must never be renamed. The updater cannot replace the active JAR until server restart.
 - Offline cleanup permanently clears inventory and Ender Chest. Test the interval and backup policy before enabling it on a production server.
 - Paper/Folia `1.21.11` and Java 21 are the supported target. Older versions and unrelated server implementations are not guaranteed.
 
@@ -80,11 +81,11 @@ WRTPKILL 不替代战斗引擎、竞技场规则或反作弊插件，应与服�
 
 WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、坐标、世界、日志和运行记录只保存在服务器本地。更新器仅读取公开的 GitHub Release 版本信息，并按需下载所选官方语言 JAR；不会上传 Minecraft 服务器资料。GitHub 仍会收到来源 IP 地址及 User-Agent 中的 WRTPKILL 版本等普通 HTTPS 连接元数据。
 
-唯一官方下载页面是 `https://github.com/Lazyzouo/WRTPKILL/releases`。请从所需标签的 Release 中安装 `en.us.jar` 或 `zh.cn.jar`；GitHub 自动显示的源码压缩包不是插件 JAR。完整声明保存在 `RELEASE_NOTICE.md`，并会自动置于每个 Release 顶部。
+唯一官方下载页面是 `https://github.com/Lazyzouo/WRTPKILL/releases`。请从所需标签的 Release 中安装 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`；GitHub 自动显示的源码压缩包不是插件 JAR。完整声明保存在 `RELEASE_NOTICE.md`，并会自动置于每个 Release 顶部。
 
 ### 配置归属
 
-仓库内 `src/main/resources/config.yml` 只保存官方示例参数。`en.us.jar` 与 `zh.cn.jar` 都保留完整配置及其注释，只有默认 `language` 值不同。服务端运行时会在 `plugins/WRTPKILL/config.yml` 生成独立配置；更新插件不会覆盖现有运行配置，也不会覆盖 `plugins/WRTPKILL/lang/en_US.yml`。服务器专用世界名、坐标、玩家名和阈值应只写入运行目录，不应提交到源码仓库。
+仓库内 `src/main/resources/config.yml` 只保存官方示例参数。`WRTPKILL-<版本>-en.us.jar` 与 `WRTPKILL-<版本>-zh.cn.jar` 都保留完整配置及其注释，只有默认 `language` 值不同。服务端运行时会在 `plugins/WRTPKILL/config.yml` 生成独立配置；更新插件不会覆盖现有运行配置，也不会覆盖 `plugins/WRTPKILL/lang/en_US.yml`。服务器专用世界名、坐标、玩家名和阈值应只写入运行目录，不应提交到源码仓库。
 
 ### 配置项
 
@@ -115,7 +116,8 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 4. 玩家死亡会解除传送锁，并合并显示复活与权限恢复消息；延迟复活或重新上线时仍可恢复待显示消息。
 5. 离线清理触发后会清空背包和末影箱、返回复活点并解除传送锁。
 6. `/nopos` 使用持久数据保存隐藏状态；管理员仍可看到隐藏玩家并收到隐藏标记。
-7. 更新器按语义版本比较 GitHub Release，根据当前语言选择 `en.us.jar` 或 `zh.cn.jar`，沿用正在运行的插件 JAR 文件名保存到更新目录，重启后应用。
+7. 更新器按语义版本比较 GitHub Release，根据当前语言选择 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`，沿用正在运行的插件 JAR 文件名保存到更新目录，重启后应用。
+8. 启动、卸载和更新器状态统一使用彩色 `[WRTPKILL]` 后台前缀；横幅保持青色系一致，更新状态按结果使用青、绿、黄或红色。
 
 ### 权限边界
 
@@ -130,6 +132,6 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 - 从配置移除动态 RTP 后功能立即失效，但指令标签可能保留在服务端命令表中直至重启。
 - TPA 请求超时固定为 30 秒。
 - 白名单绕过锁定检查；成功传送后仍可能写入锁标记，但玩家留在白名单期间会继续绕过。
-- 自动更新需要访问 `api.github.com` 和 GitHub Release 资源；每个 Release 只手动上传 `en.us.jar` 与 `zh.cn.jar`，GitHub 仍会显示无法关闭的自动源码压缩包。活动中的 JAR 必须等服务端重启才能替换。
+- 自动更新需要访问 `api.github.com` 和 GitHub Release 资源；每个 Release 只手动上传 `WRTPKILL-<版本>-en.us.jar` 与 `WRTPKILL-<版本>-zh.cn.jar`，GitHub 仍会显示无法关闭的自动源码压缩包。Release JAR 必须直接上传 Gradle 原产物，禁止改名。活动中的 JAR 必须等服务端重启才能替换。
 - 离线清理会永久清空背包与末影箱，生产服启用前必须确认阈值并做好备份。
 - 官方目标是 Paper/Folia `1.21.11` 与 Java 21，不保证兼容旧版或其他服务端实现。

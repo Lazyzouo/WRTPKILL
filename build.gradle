@@ -7,7 +7,7 @@ def pluginName = "WRTPKILL"
 def pluginAuthor = "Lazyz"
 
 group = pluginGroup
-version = '1.1.3'
+version = '1.2.0'
 
 def releaseNotesVersion = providers.gradleProperty('releaseVersion').getOrElse(version.toString())
 def releaseNoticeFile = layout.projectDirectory.file('RELEASE_NOTICE.md')
@@ -55,7 +55,9 @@ tasks.register('generateReleaseNotes') {
         def changes = nextEntry < 0
                 ? changelog.substring(contentStart)
                 : changelog.substring(contentStart, nextEntry)
-        def notice = releaseNoticeFile.asFile.getText('UTF-8').trim()
+        def notice = releaseNoticeFile.asFile.getText('UTF-8')
+                .replace('{{VERSION}}', releaseNotesVersion)
+                .trim()
         def notes = "${notice}\n\n---\n\n## Release Notes / 更新内容\n\n${changes.trim()}\n"
 
         def target = generatedReleaseNotesFile.get().asFile
@@ -83,7 +85,7 @@ processResources {
 
 tasks.register('chineseJar', Jar) {
     dependsOn classes
-    archiveFileName = 'zh.cn.jar'
+    archiveFileName = "${pluginName}-${project.version}-zh.cn.jar"
     from sourceSets.main.output
 }
 
@@ -109,7 +111,7 @@ tasks.register('prepareEnglishConfig') {
 
 tasks.register('englishJar', Jar) {
     dependsOn classes, prepareEnglishConfig
-    archiveFileName = 'en.us.jar'
+    archiveFileName = "${pluginName}-${project.version}-en.us.jar"
     from(sourceSets.main.output) {
         exclude 'config.yml'
     }

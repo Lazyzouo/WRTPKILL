@@ -9,5 +9,6 @@
 - Update `CHANGELOG.md` for every release and update `README.md` plus `WRTPKILL.md` whenever behavior, configuration, compatibility, limits, or administration changes.
 - Keep tracked configuration values as official defaults only. Never commit server-specific player names, coordinates, world names, tokens, logs, or runtime data.
 - After verification, commit and push every completed update to the `main` branch of `https://github.com/Lazyzouo/WRTPKILL` so the release workflow publishes the matching GitHub Release and changelog automatically.
-- Confirm that the GitHub Release contains exactly the manually uploaded assets `en.us.jar` and `zh.cn.jar`. GitHub's automatic source archives are platform-provided and excluded from this check.
+- Confirm that every GitHub Release contains exactly the manually uploaded assets `WRTPKILL-<version>-en.us.jar` and `WRTPKILL-<version>-zh.cn.jar`, where `<version>` exactly matches the Release tag without its leading `v`. GitHub's automatic source archives are platform-provided and excluded from this check.
+- Upload Release JARs directly from Gradle's `build/libs` output. Never copy, rename, repackage, or otherwise change a built JAR's filename between the Gradle build and the GitHub Release upload.
 - Keep `RELEASE_NOTICE.md` at the top of every GitHub Release. Update its official-source, compatibility, privacy, data-handling, and updater-network statements whenever those guarantees change.

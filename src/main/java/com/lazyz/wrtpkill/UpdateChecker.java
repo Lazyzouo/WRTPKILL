@@ -20,8 +20,7 @@ public final class UpdateChecker {
     public static final String REPOSITORY_URL = "https://github.com/Lazyzouo/WRTPKILL";
     private static final URI LATEST_RELEASE_API = URI.create(
             "https://api.github.com/repos/Lazyzouo/WRTPKILL/releases/latest");
-    private static final String ENGLISH_ASSET_NAME = "en.us.jar";
-    private static final String CHINESE_ASSET_NAME = "zh.cn.jar";
+    private static final String RELEASES_URL = REPOSITORY_URL + "/releases";
 
     private final WRTPKILL plugin;
     private final HttpClient httpClient = HttpClient.newBuilder()
@@ -35,10 +34,12 @@ public final class UpdateChecker {
 
     public void checkForUpdates() {
         if (!plugin.getConfig().getBoolean("updater.enabled", true)) {
-            log("Updater disabled by configuration.", "自动更新检查已由配置关闭。");
+            log("&e", "Updater disabled by configuration.", "自动更新检查已由配置关闭。");
             return;
         }
 
+        log("&b", "Checking the official WRTPKILL GitHub Release for updates.",
+                "正在检查 WRTPKILL 官方 GitHub Release 更新。");
         try {
             HttpRequest request = HttpRequest.newBuilder(LATEST_RELEASE_API)
                     .timeout(Duration.ofSeconds(20))
@@ -56,28 +57,29 @@ public final class UpdateChecker {
             String latestVersion = cleanVersion(release.get("tag_name").getAsString());
             String currentVersion = cleanVersion(plugin.getDescription().getVersion());
             if (SemanticVersion.compare(latestVersion, currentVersion) <= 0) {
-                log("WRTPKILL " + currentVersion + " is the latest version.",
+                log("&a", "WRTPKILL " + currentVersion + " is already the latest version.",
                         "WRTPKILL " + currentVersion + " 已是最新版本。");
                 return;
             }
 
-            log("New version " + latestVersion + " is available.",
-                    "发现新版本 " + latestVersion + "。");
+            log("&e", "WRTPKILL " + latestVersion + " is available; the current version is " + currentVersion + ".",
+                    "发现 WRTPKILL 新版本 " + latestVersion + "，当前版本为 " + currentVersion + "。");
             if (!plugin.getConfig().getBoolean("updater.auto-download", true)) {
-                log("Automatic download is disabled. Download: " + REPOSITORY_URL + "/releases/latest",
-                        "自动下载已关闭，请前往下载：" + REPOSITORY_URL + "/releases/latest");
+                log("&e", "Automatic download is disabled. Download from: &9" + RELEASES_URL,
+                        "自动下载已关闭，请前往官方下载：&9" + RELEASES_URL);
                 return;
             }
 
-            String assetName = plugin.getLanguageManager().isEnglish()
-                    ? ENGLISH_ASSET_NAME
-                    : CHINESE_ASSET_NAME;
+            String assetName = releaseAssetName(latestVersion, plugin.getLanguageManager().isEnglish());
             URI assetUri = findAsset(release.getAsJsonArray("assets"), assetName);
             if (assetUri == null) throw new IOException("Release asset " + assetName + " is missing");
             download(assetUri, latestVersion);
         } catch (Exception exception) {
-            plugin.getLogger().warning("Update check/download failed: " + exception.getMessage());
-            plugin.getLogger().warning("更新检查或下载失败，可手动下载：" + REPOSITORY_URL + "/releases/latest");
+            String reason = safeReason(exception);
+            log("&c", "WRTPKILL update check/download failed: " + reason
+                            + ". Download manually from: &9" + RELEASES_URL,
+                    "WRTPKILL 更新检查或下载失败：" + reason
+                            + "。请前往官方下载：&9" + RELEASES_URL);
         }
     }
 
@@ -110,7 +112,7 @@ public final class UpdateChecker {
 
             Path target = updateDirectory.resolve(plugin.getPluginJarName());
             Files.move(temporaryFile, target, StandardCopyOption.REPLACE_EXISTING);
-            log("Downloaded WRTPKILL " + latestVersion + " to " + target + ". Restart to apply it.",
+            log("&a", "Downloaded WRTPKILL " + latestVersion + " to " + target + ". Restart to apply it.",
                     "已下载 WRTPKILL " + latestVersion + " 至 " + target + "，重启服务器后生效。");
         } finally {
             Files.deleteIfExists(temporaryFile);
@@ -122,7 +124,18 @@ public final class UpdateChecker {
         return version.trim().replaceFirst("^[vV]", "");
     }
 
-    private void log(String english, String chinese) {
-        plugin.getLogger().info(plugin.getLanguageManager().isEnglish() ? english : chinese);
+    static String releaseAssetName(String version, boolean english) {
+        return "WRTPKILL-" + cleanVersion(version) + "-" + (english ? "en.us" : "zh.cn") + ".jar";
+    }
+
+    private String safeReason(Exception exception) {
+        String message = exception.getMessage();
+        return message == null || message.isBlank()
+                ? exception.getClass().getSimpleName()
+                : message.replace('\n', ' ').replace('\r', ' ');
+    }
+
+    private void log(String color, String english, String chinese) {
+        plugin.logConsole(color + (plugin.getLanguageManager().isEnglish() ? english : chinese));
     }
 }

@@ -14,7 +14,7 @@
 >
 > **Official downloads / 唯一官方下载：** https://github.com/Lazyzouo/WRTPKILL/releases
 >
-> Select the version by its Release tag and install only `en.us.jar` or `zh.cn.jar`. The automatic Source code archives are not plugin JARs. / 请按 Release 标签选择版本，并且只安装 `en.us.jar` 或 `zh.cn.jar`；自动显示的 Source code 压缩包不是插件 JAR。
+> Select the version by its Release tag and install only `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar`. The automatic Source code archives are not plugin JARs. / 请按 Release 标签选择版本，并且只安装 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`；自动显示的 Source code 压缩包不是插件 JAR。
 >
 > Full statement / 完整声明：[RELEASE_NOTICE.md](RELEASE_NOTICE.md)
 
@@ -43,7 +43,7 @@ The plugin is a training-server operations layer, not a combat engine or anti-ch
 | Tested/target Minecraft version | `1.21.11` |
 | Server software | Paper or Folia |
 | Java | 21 or newer |
-| Plugin version | `1.1.3` |
+| Plugin version | `1.2.0` |
 
 The project compiles against Paper API `1.21.11`. Compatibility with forks or older Minecraft versions is not guaranteed.
 
@@ -56,12 +56,13 @@ The project compiles against Paper API `1.21.11`. Compatibility with forks or ol
 - `/pos` world grouping, red world-name gradients, green coordinate gradients, and privacy through `/nopos`.
 - Optional forced respawn, shared spawn, first-join teleport, and offline inventory cleanup.
 - Simplified Chinese and English user interfaces.
+- Color-coded startup banner and update status messages with one consistent `[WRTPKILL]` console prefix.
 - Startup update checks with automatic download to the server update directory.
 - Folia-aware command, teleport, and player scheduling.
 
 ### Download and installation
 
-1. Download `en.us.jar` from the [latest release](https://github.com/Lazyzouo/WRTPKILL/releases/latest). Use `zh.cn.jar` instead for a Simplified Chinese default installation.
+1. Download `WRTPKILL-<version>-en.us.jar` from the [latest release](https://github.com/Lazyzouo/WRTPKILL/releases/latest). Use `WRTPKILL-<version>-zh.cn.jar` instead for a Simplified Chinese default installation.
 2. Place it in the server `plugins` directory.
 3. Start the server once to generate the configuration.
 4. Restart the server. Use `/wrtp help` in game.
@@ -87,7 +88,7 @@ See [WRTPKILL.md](WRTPKILL.md) for all settings, behavior, limits, update rules,
 
 ### Automatic updates
 
-At startup, WRTPKILL checks the latest GitHub Release. If a newer semantic version exists and `updater.auto-download` is enabled, it downloads `en.us.jar` or `zh.cn.jar` to match the configured language, then stages it under the running plugin JAR's filename in the update directory. The server must be restarted to apply it. Failures are reported in the console with the official release URL.
+At startup, WRTPKILL checks the latest GitHub Release. If a newer semantic version exists and `updater.auto-download` is enabled, it downloads `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` to match the configured language, then stages it under the running plugin JAR's filename in the update directory. The server must be restarted to apply it. Checking, latest-version, update-available, download-success, manual-download, and failure states use colored console messages with the official release URL when needed.
 
 ### Build from source
 
@@ -95,7 +96,7 @@ At startup, WRTPKILL checks the latest GitHub Release. If a newer semantic versi
 ./gradlew clean build
 ```
 
-Release-ready outputs are `build/libs/en.us.jar` and `build/libs/zh.cn.jar`. Gradle also creates an internal versioned JAR, but the official GitHub Release attaches only the two language packages. Do not publish a modified binary under the official project name without clearly identifying the fork.
+Release-ready outputs are `build/libs/WRTPKILL-<version>-en.us.jar` and `build/libs/WRTPKILL-<version>-zh.cn.jar`. The official workflow uploads these exact Gradle outputs directly and must never copy or rename them before publication. Gradle also creates an internal standard JAR, but the official GitHub Release attaches only the two language packages. Do not publish a modified binary under the official project name without clearly identifying the fork.
 
 ## 中文
 
@@ -122,7 +123,7 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 | 测试/目标 Minecraft 版本 | `1.21.11` |
 | 服务端 | Paper 或 Folia |
 | Java | 21 或更高版本 |
-| 插件版本 | `1.1.3` |
+| 插件版本 | `1.2.0` |
 
 项目使用 Paper API `1.21.11` 编译；不保证兼容旧版 Minecraft 或所有第三方分支。
 
@@ -135,12 +136,13 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 - `/pos` 按世界分组，世界名红色渐变、坐标绿色渐变，支持 `/nopos` 隐藏。
 - 可选强制复活、统一复活点、首次进服传送和离线背包清理。
 - 简体中文与英文界面。
+- 使用统一 `[WRTPKILL]` 后台前缀的彩色启动横幅和更新状态提示。
 - 开服自动检查更新并下载到服务端更新目录。
 - 兼容 Folia 的调度与异步传送流程。
 
 ### 下载与安装
 
-1. 从[最新 Release](https://github.com/Lazyzouo/WRTPKILL/releases/latest)下载中文默认包 `zh.cn.jar`；需要英文默认配置时下载 `en.us.jar`。
+1. 从[最新 Release](https://github.com/Lazyzouo/WRTPKILL/releases/latest)下载中文默认包 `WRTPKILL-<版本>-zh.cn.jar`；需要英文默认配置时下载 `WRTPKILL-<版本>-en.us.jar`。
 2. 放入服务端 `plugins` 目录。
 3. 启动一次服务器生成配置。
 4. 重启服务器，并在游戏内使用 `/wrtp help`。
@@ -151,7 +153,7 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 
 ### 自动更新
 
-插件会在启动时检查 GitHub 最新 Release。若发现更高语义版本且 `updater.auto-download` 已开启，会按当前配置语言选择 `en.us.jar` 或 `zh.cn.jar`，并沿用正在运行的插件 JAR 文件名暂存到更新目录；重启服务器后应用。失败时后台会显示官方 Release 地址供手动下载。
+插件会在启动时检查 GitHub 最新 Release。若发现更高语义版本且 `updater.auto-download` 已开启，会按当前配置语言选择 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`，并沿用正在运行的插件 JAR 文件名暂存到更新目录；重启服务器后应用。检查中、已是最新、发现新版、下载成功、手动下载和失败状态都会在后台使用不同颜色，必要时显示官方 Release 地址。
 
 ## License / 许可证
 

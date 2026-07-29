@@ -17,8 +17,8 @@ This Release is built automatically from the corresponding tagged source by the 
 
 Do not treat third-party mirrors or repackaged files as official builds. Select the required version by its Release tag and install exactly one of these two uploaded assets:
 
-- `en.us.jar`: English is the official default language.
-- `zh.cn.jar`: Simplified Chinese is the official default language.
+- `WRTPKILL-{{VERSION}}-en.us.jar`: English is the official default language.
+- `WRTPKILL-{{VERSION}}-zh.cn.jar`: Simplified Chinese is the official default language.
 
 Both packages contain the same compiled plugin code, resources, and configuration comments. Only the official default `language` parameter differs. GitHub records a SHA-256 digest for each uploaded asset. GitHub's automatic **Source code (zip)** and **Source code (tar.gz)** links are source archives, not installable plugin JARs.
 
@@ -32,8 +32,8 @@ Both packages contain the same compiled plugin code, resources, and configuratio
 
 请勿将第三方镜像或重新打包文件视为官方构建。请按 Release 标签选择所需版本，并且只安装下列两个上传资源中的一个：
 
-- `en.us.jar`：官方默认语言为英文。
-- `zh.cn.jar`：官方默认语言为简体中文。
+- `WRTPKILL-{{VERSION}}-en.us.jar`：官方默认语言为英文。
+- `WRTPKILL-{{VERSION}}-zh.cn.jar`：官方默认语言为简体中文。
 
 两个包包含完全相同的已编译插件代码、资源与配置注释，仅官方默认 `language` 参数不同。GitHub 会为每个上传资源记录 SHA-256 摘要。GitHub 自动显示的 **Source code (zip)** 与 **Source code (tar.gz)** 是源码压缩包，不是可安装的插件 JAR。
 

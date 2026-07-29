@@ -1,6 +1,7 @@
 package com.lazyz.wrtpkill;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -62,7 +63,7 @@ public class WRTPKILL extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("WRTPKILL disabled / WRTPKILL 已卸载");
+        logConsole("&cWRTPKILL disabled / WRTPKILL 已卸载");
     }
 
     public void syncDynamicCommands() {
@@ -113,13 +114,31 @@ public class WRTPKILL extends JavaPlugin {
     private void printStartupBanner() {
         String version = getDescription().getVersion();
         String language = languageManager.getLanguage();
-        getLogger().info("============================================================");
-        getLogger().info("  WRTPKILL v" + version + "  |  Folia / Paper 1.21.11");
-        getLogger().info("  Author: Lazyz  |  Language: " + language);
-        getLogger().info("  RTP + TPA + Position + Respawn Management");
-        getLogger().info("  随机传送 + 玩家互传 + 坐标查询 + 复活管理");
-        getLogger().info("  " + UpdateChecker.REPOSITORY_URL);
-        getLogger().info("============================================================");
+        logConsole("&3&l+====================================================+");
+        logConsole("&b&l" + centerBannerLine("WRTPKILL TELEPORT MANAGEMENT v" + version));
+        logConsole("&3&l| &fVersion / 版本 &8: &a" + version);
+        logConsole("&3&l| &fAuthor  / 作者 &8: &eLazyz");
+        logConsole("&3&l| &fTested  / 测试 &8: &aPaper & Folia 1.21.11");
+        logConsole("&3&l| &fLanguage/ 语言 &8: &b" + language);
+        logConsole("&3&l| &fGitHub         &8: &9" + UpdateChecker.REPOSITORY_URL);
+        logConsole("&3&l| &aOpen source. &fNo telemetry or server-data upload.");
+        logConsole("&3&l+====================================================+");
+        String enabled = languageManager.isEnglish()
+                ? "&a&l» WRTPKILL v" + version + " by Lazyz started successfully on Paper/Folia."
+                : "&a&l» WRTPKILL v" + version + " by Lazyz 已在 Paper/Folia 核心上成功启动！";
+        logConsole(enabled);
+    }
+
+    void logConsole(String message) {
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes(
+                '&', "&8[&bWRTPKILL&8] &r" + message));
+    }
+
+    private String centerBannerLine(String text) {
+        int width = 52;
+        int leftPadding = Math.max(0, (width - text.length()) / 2);
+        int rightPadding = Math.max(0, width - text.length() - leftPadding);
+        return "|" + " ".repeat(leftPadding) + text + " ".repeat(rightPadding) + "|";
     }
 
     private void migrateDefaultMessages() {
