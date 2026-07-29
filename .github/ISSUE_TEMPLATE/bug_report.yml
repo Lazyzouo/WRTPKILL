@@ -1,0 +1,48 @@
+name: Bug report / 错误报告
+description: Report a reproducible WRTPKILL problem / 报告可复现问题
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Provide English first when possible, followed by Chinese if needed.
+        请尽量先写英文，再补充中文。
+  - type: input
+    id: plugin-version
+    attributes:
+      label: WRTPKILL version / 插件版本
+      placeholder: 1.1.0
+    validations:
+      required: true
+  - type: input
+    id: server-version
+    attributes:
+      label: Server and Minecraft version / 服务端与游戏版本
+      placeholder: Folia 1.21.11, Java 21
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior / 预期行为
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and reproduction / 实际行为与复现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / 相关日志
+      render: text
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Data safety / 数据安全
+      options:
+        - label: I removed tokens, IP addresses, and private player data. / 我已移除令牌、IP 与私人玩家数据。
+          required: true

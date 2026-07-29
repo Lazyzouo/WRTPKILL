@@ -1,0 +1,22 @@
+name: Feature request / 功能建议
+description: Propose a compatible improvement / 提议兼容性改进
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case / 问题或使用场景
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed behavior / 建议行为
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and configuration impact / 兼容性与配置影响
+      description: Explain migration needs and Paper/Folia considerations. / 请说明迁移需求与 Paper/Folia 影响。

@@ -1,0 +1,62 @@
+# WRTPKILL official English configuration preset
+# Compatibility target: Paper/Folia 1.21.11, Java 21
+# Place this file at plugins/WRTPKILL/config.yml before starting the server.
+
+language: "en_US"
+
+updater:
+  # Check the official GitHub Releases page whenever the server starts.
+  enabled: true
+  # Download a newer WRTPKILL.jar into the server update directory automatically.
+  auto-download: true
+
+# Players listed here bypass the one-use RTP/TPA teleport lock.
+# Server operators can add names with /wrtp whitelist add <player>.
+whitelist: []
+
+# Global switch for /tpa, /tpaccept, /tpdeny and /tpcancel.
+tpa-enabled: true
+
+suicide-settings:
+  # Skip the vanilla death screen and return players to the configured spawn.
+  force-respawn-enabled: true
+  respawn-world: "world"
+
+  # Clear inventory and Ender Chest after the configured offline duration.
+  offline-clear-enabled: true
+  offline-clear-minutes: 3
+
+  # Send first-time players to the configured spawn.
+  first-join-teleport-enabled: true
+
+# Run /wrtp setspawn and /wrtp setspawn confirm in game to set this safely.
+custom-spawn:
+  enabled: false
+  x: 0.5
+  y: 64.0
+  z: 0.5
+  yaw: 0.0
+  pitch: 0.0
+
+# Each top-level key becomes a command. The examples below register /nether and
+# /overworld. use-border=true uses the target world's current WorldBorder.
+worlds:
+  nether:
+    world-name: "world_nether"
+    use-border: false
+    min-x: -200
+    max-x: 200
+    min-z: -200
+    max-z: 200
+    scan-max-y: 18
+    scan-min-y: 0
+
+  overworld:
+    world-name: "world"
+    use-border: false
+    min-x: -200
+    max-x: 200
+    min-z: -200
+    max-z: 200
+    scan-max-y: 319
+    scan-min-y: -64

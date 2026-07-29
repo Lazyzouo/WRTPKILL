@@ -1,0 +1,32 @@
+name: '${name}'
+version: '${version}'
+author: '${author}'
+main: '${group}.WRTPKILL'
+api-version: '1.21'
+folia-supported: true
+description: Folia-ready RTP, TPA, position and respawn management / 支持 Folia 的随机传送、互传、坐标与复活管理插件
+website: 'https://github.com/Lazyzouo/WRTPKILL'
+softdepend: [worlds, AuthMe, WorldAreaReset]
+commands:
+  wrtp:
+    description: WRTPKILL help and administration / 帮助与管理
+    usage: /wrtp help
+  tpa:
+    description: Send a teleport request / 发送传送请求
+    usage: /tpa <player>
+  tpaccept:
+    description: Accept a teleport request / 接受传送请求
+  tpdeny:
+    description: Deny a teleport request / 拒绝传送请求
+  tpcancel:
+    description: Cancel a teleport request / 取消已发送的传送请求
+  suicide:
+    description: Respawn at the configured spawn / 在配置的复活点重生
+  pos:
+    description: Show online player positions / 查看在线玩家坐标
+  nopos:
+    description: Toggle position privacy / 切换坐标隐藏状态
+permissions:
+  worldrtp.admin:
+    description: WRTPKILL administrator access / 插件管理员权限
+    default: op
