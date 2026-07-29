@@ -4,6 +4,24 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.2.2] - 2026-07-30
+
+### English
+
+#### Fixed
+
+- Completed the cyan right border on every startup-banner detail row.
+- Expanded the banner inner width from 52 to 60 visible console columns so the GitHub URL and transparency statement retain spacing before the border.
+- Added startup-banner layout regression coverage and updated project version labels to `1.2.2`.
+
+### 中文
+
+#### 修复
+
+- 为启动横幅的每一条详情行补齐青色右边框。
+- 将横幅内部宽度从 52 个可见控制台列扩展到 60 个，确保 GitHub 地址与开源透明声明不会紧贴或遮挡边框。
+- 新增启动横幅布局回归测试，并将项目版本标识更新为 `1.2.2`。
+
 ## [1.2.1] - 2026-07-29
 
 ### English
@@ -190,5 +208,6 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.2.2]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.2
 [1.2.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.1
 [1.2.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.0
