@@ -9,6 +9,20 @@
 
 WRTPKILL is a Folia-ready Paper plugin that combines multi-world random teleportation, player teleport requests, position visibility, controlled respawning, offline cleanup, and a one-use teleport lock. It is maintained by **Lazyz**.
 
+### Official software introduction
+
+WRTPKILL is recommended for PVP training servers, organized practice networks, and multi-arena communities that need a consistent way to move players between training areas. It provides the server-side workflow around a match: safe random deployment, player invitations, visible or private position sharing, controlled respawn, and lock recovery after death or a long disconnect.
+
+The plugin is a training-server operations layer, not a combat engine or anti-cheat replacement. Pair it with the server's preferred PVP, arena, permissions, and protection plugins for the actual rules of each training mode.
+
+#### Recommended PVP training scenarios
+
+- Fast movement between overworld, Nether, and dedicated practice worlds.
+- TPA-based team assembly before a drill or sparring session.
+- `/pos` and `/nopos` for controlled teammate coordination and privacy.
+- Predictable respawn and lock recovery after repeated practice deaths.
+- Offline cleanup and shared spawn management for rotating training groups.
+
 ### Compatibility
 
 | Item | Requirement |
@@ -16,7 +30,7 @@ WRTPKILL is a Folia-ready Paper plugin that combines multi-world random teleport
 | Tested/target Minecraft version | `1.21.11` |
 | Server software | Paper or Folia |
 | Java | 21 or newer |
-| Plugin version | `1.1.1` |
+| Plugin version | `1.1.2` |
 
 The project compiles against Paper API `1.21.11`. Compatibility with forks or older Minecraft versions is not guaranteed.
 
@@ -74,6 +88,20 @@ Release-ready outputs are `build/libs/en.us.jar` and `build/libs/zh.cn.jar`. Gra
 
 WRTPKILL 是由 **Lazyz** 维护的 Paper/Folia 综合插件，整合多世界随机传送、玩家互传、坐标展示与隐藏、死亡复活接管、离线清理及一次性传送权限锁。
 
+### 官方软件介绍
+
+WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场社区，为训练区域之间的玩家移动提供统一的服务端流程。插件覆盖一场训练所需的基础环节：安全随机部署、玩家互相邀请、公开或私密坐标协作、可控复活，以及玩家死亡或长时间离线后的权限锁恢复。
+
+本插件定位为训练服务器运营基础设施，不是战斗判定引擎，也不是反作弊插件。实际训练规则应配合服主选择的 PVP、竞技场、权限与区域保护插件共同配置。
+
+#### 推荐的 PVP 训练场景
+
+- 在主世界、下界和专用训练世界之间快速移动。
+- 训练或对练开始前通过 TPA 组建队伍。
+- 使用 `/pos` 与 `/nopos` 控制队友协作和坐标隐私。
+- 重复训练死亡后获得统一的复活与传送锁恢复流程。
+- 为轮换训练小组管理离线清理和统一复活点。
+
 ### 兼容性
 
 | 项目 | 要求 |
@@ -81,7 +109,7 @@ WRTPKILL 是由 **Lazyz** 维护的 Paper/Folia 综合插件，整合多世界�
 | 测试/目标 Minecraft 版本 | `1.21.11` |
 | 服务端 | Paper 或 Folia |
 | Java | 21 或更高版本 |
-| 插件版本 | `1.1.1` |
+| 插件版本 | `1.1.2` |
 
 项目使用 Paper API `1.21.11` 编译；不保证兼容旧版 Minecraft 或所有第三方分支。
 

@@ -7,7 +7,7 @@ def pluginName = "WRTPKILL"
 def pluginAuthor = "Lazyz"
 
 group = pluginGroup
-version = '1.1.1'
+version = '1.1.2'
 
 repositories {
     mavenCentral()

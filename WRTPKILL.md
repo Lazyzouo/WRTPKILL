@@ -1,8 +1,14 @@
 # WRTPKILL Administrator Guide / 管理员配置说明
 
-Version `1.1.1` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
+Version `1.1.2` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 
 ## English
+
+### Recommended deployment
+
+WRTPKILL is recommended for PVP training servers, organized practice networks, and multi-arena communities. It provides the operational layer around a training session: safe movement between practice worlds, TPA-based team assembly, controlled position sharing, predictable respawn, and recovery of one-use teleport permissions after death or a long disconnect.
+
+WRTPKILL does not replace a combat engine, arena ruleset, or anti-cheat plugin. Pair it with the server's preferred PVP, permissions, and protection systems.
 
 ### Configuration ownership
 
@@ -57,6 +63,12 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 - Paper/Folia `1.21.11` and Java 21 are the supported target. Older versions and unrelated server implementations are not guaranteed.
 
 ## 中文
+
+### 推荐部署
+
+WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场社区，为训练流程提供基础运营层：在训练世界之间安全移动、通过 TPA 组建队伍、控制坐标分享、统一复活，以及在死亡或长时间离线后恢复一次性传送权限。
+
+WRTPKILL 不替代战斗引擎、竞技场规则或反作弊插件，应与服主选择的 PVP、权限和区域保护系统配合使用。
 
 ### 配置归属
 

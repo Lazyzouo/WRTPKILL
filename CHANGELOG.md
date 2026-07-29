@@ -4,6 +4,30 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.1.2] - 2026-07-29
+
+### English
+
+#### Added
+
+- Official software introduction and recommended PVP training-server deployment guidance.
+- Clear positioning of WRTPKILL as a training-server operations layer alongside PVP, arena, permissions, protection, and anti-cheat plugins.
+
+#### Changed
+
+- Project version and documentation compatibility labels updated to `1.1.2`.
+
+### 中文
+
+#### 新增
+
+- 新增官方软件介绍与 PVP 训练服务器推荐部署说明。
+- 明确 WRTPKILL 是配合 PVP、竞技场、权限、区域保护和反作弊插件使用的训练服务器运营基础设施。
+
+#### 调整
+
+- 项目版本和文档兼容性标识更新为 `1.1.2`。
+
 ## [1.1.1] - 2026-07-29
 
 ### English
@@ -74,5 +98,6 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.1.2]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.2
 [1.1.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.1
 [1.1.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.0
