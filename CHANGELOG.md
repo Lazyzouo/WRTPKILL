@@ -4,6 +4,32 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.1.3] - 2026-07-29
+
+### English
+
+#### Added
+
+- Pinned bilingual open-source, no-backdoor, local-data-storage, and updater-network transparency statement.
+- Official Release declaration identifying the only official download page, the two installable language JARs, compatibility, and the non-installable GitHub source archives.
+- Reusable release-note generation that automatically prepends the declaration to every future GitHub Release.
+
+#### Changed
+
+- Project version and documentation compatibility labels updated to `1.1.3`.
+
+### 中文
+
+#### 新增
+
+- 新增置顶双语声明，说明项目完全开源、无后门、插件数据仅本地保存，并公开更新器网络边界。
+- 新增官方发布声明，标明唯一官方下载页、两个可安装语言 JAR、兼容范围，以及不可安装的 GitHub 源码压缩包。
+- 新增可复用 Release 说明生成流程，今后每个 GitHub Release 都会自动在顶部加入该声明。
+
+#### 调整
+
+- 项目版本和文档兼容性标识更新为 `1.1.3`。
+
 ## [1.1.2] - 2026-07-29
 
 ### English
@@ -98,6 +124,7 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.1.3]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.3
 [1.1.2]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.2
 [1.1.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.1
 [1.1.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.1.0

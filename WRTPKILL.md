@@ -1,6 +1,6 @@
 # WRTPKILL Administrator Guide / 管理员配置说明
 
-Version `1.1.2` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
+Version `1.1.3` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 
 ## English
 
@@ -9,6 +9,12 @@ Version `1.1.2` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 WRTPKILL is recommended for PVP training servers, organized practice networks, and multi-arena communities. It provides the operational layer around a training session: safe movement between practice worlds, TPA-based team assembly, controlled position sharing, predictable respawn, and recovery of one-use teleport permissions after death or a long disconnect.
 
 WRTPKILL does not replace a combat engine, arena ruleset, or anti-cheat plugin. Pair it with the server's preferred PVP, permissions, and protection systems.
+
+### Data and update transparency
+
+Official WRTPKILL builds contain no hidden backdoor or telemetry. Configuration, player state, coordinates, worlds, logs, and runtime records remain local to the server. The updater only reads public GitHub Release metadata and optionally downloads the selected official language JAR; it does not upload Minecraft server data. GitHub still receives ordinary HTTPS connection metadata such as the source IP address and the WRTPKILL version in the User-Agent header.
+
+The only official download page is `https://github.com/Lazyzouo/WRTPKILL/releases`. Install `en.us.jar` or `zh.cn.jar` from the required tagged Release. GitHub's automatic source archives are not plugin JARs. The complete statement is maintained in `RELEASE_NOTICE.md` and prepended to every Release.
 
 ### Configuration ownership
 
@@ -69,6 +75,12 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场社区，为训练流程提供基础运营层：在训练世界之间安全移动、通过 TPA 组建队伍、控制坐标分享、统一复活，以及在死亡或长时间离线后恢复一次性传送权限。
 
 WRTPKILL 不替代战斗引擎、竞技场规则或反作弊插件，应与服主选择的 PVP、权限和区域保护系统配合使用。
+
+### 数据与更新透明度
+
+WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、坐标、世界、日志和运行记录只保存在服务器本地。更新器仅读取公开的 GitHub Release 版本信息，并按需下载所选官方语言 JAR；不会上传 Minecraft 服务器资料。GitHub 仍会收到来源 IP 地址及 User-Agent 中的 WRTPKILL 版本等普通 HTTPS 连接元数据。
+
+唯一官方下载页面是 `https://github.com/Lazyzouo/WRTPKILL/releases`。请从所需标签的 Release 中安装 `en.us.jar` 或 `zh.cn.jar`；GitHub 自动显示的源码压缩包不是插件 JAR。完整声明保存在 `RELEASE_NOTICE.md`，并会自动置于每个 Release 顶部。
 
 ### 配置归属
 

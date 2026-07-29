@@ -5,6 +5,19 @@
 [![Release](https://img.shields.io/github/v/release/Lazyzouo/WRTPKILL)](https://github.com/Lazyzouo/WRTPKILL/releases/latest)
 [![License](https://img.shields.io/github/license/Lazyzouo/WRTPKILL)](LICENSE)
 
+> [!IMPORTANT]
+> **Open Source and Data Transparency / 开源与数据透明声明**
+>
+> WRTPKILL is fully open source. Official builds contain no hidden backdoor or telemetry and do not upload server configuration, player data, coordinates, worlds, logs, or runtime records. Plugin-managed data remains on your server. Update checks only read version metadata from GitHub Releases and optionally download an official JAR; they do not upload Minecraft server data.
+>
+> WRTPKILL 是完全开源项目。官方构建不包含隐藏后门或遥测，不会上传服务器配置、玩家数据、坐标、世界、日志或运行记录；插件管理的数据只保存在你的服务器上。更新检查仅从 GitHub Releases 读取版本信息并按需下载官方 JAR，不会上传 Minecraft 服务器资料。
+>
+> **Official downloads / 唯一官方下载：** https://github.com/Lazyzouo/WRTPKILL/releases
+>
+> Select the version by its Release tag and install only `en.us.jar` or `zh.cn.jar`. The automatic Source code archives are not plugin JARs. / 请按 Release 标签选择版本，并且只安装 `en.us.jar` 或 `zh.cn.jar`；自动显示的 Source code 压缩包不是插件 JAR。
+>
+> Full statement / 完整声明：[RELEASE_NOTICE.md](RELEASE_NOTICE.md)
+
 ## English
 
 WRTPKILL is a Folia-ready Paper plugin that combines multi-world random teleportation, player teleport requests, position visibility, controlled respawning, offline cleanup, and a one-use teleport lock. It is maintained by **Lazyz**.
@@ -30,7 +43,7 @@ The plugin is a training-server operations layer, not a combat engine or anti-ch
 | Tested/target Minecraft version | `1.21.11` |
 | Server software | Paper or Folia |
 | Java | 21 or newer |
-| Plugin version | `1.1.2` |
+| Plugin version | `1.1.3` |
 
 The project compiles against Paper API `1.21.11`. Compatibility with forks or older Minecraft versions is not guaranteed.
 
@@ -109,7 +122,7 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 | 测试/目标 Minecraft 版本 | `1.21.11` |
 | 服务端 | Paper 或 Folia |
 | Java | 21 或更高版本 |
-| 插件版本 | `1.1.2` |
+| 插件版本 | `1.1.3` |
 
 项目使用 Paper API `1.21.11` 编译；不保证兼容旧版 Minecraft 或所有第三方分支。
 

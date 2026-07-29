@@ -10,3 +10,4 @@
 - Keep tracked configuration values as official defaults only. Never commit server-specific player names, coordinates, world names, tokens, logs, or runtime data.
 - After verification, commit and push every completed update to the `main` branch of `https://github.com/Lazyzouo/WRTPKILL` so the release workflow publishes the matching GitHub Release and changelog automatically.
 - Confirm that the GitHub Release contains exactly the manually uploaded assets `en.us.jar` and `zh.cn.jar`. GitHub's automatic source archives are platform-provided and excluded from this check.
+- Keep `RELEASE_NOTICE.md` at the top of every GitHub Release. Update its official-source, compatibility, privacy, data-handling, and updater-network statements whenever those guarantees change.
