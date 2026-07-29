@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 
@@ -17,6 +18,12 @@ public class MessageUtils {
             "help_menu_player",
             "help_menu_admin",
             "help_menu_footer",
+            "suicide_success",
+            "death_respawned",
+            "unlock_death_merged",
+            "merged_offline_notice"
+    );
+    private static final Set<String> CENTERED_PANEL_MESSAGES = Set.of(
             "suicide_success",
             "death_respawned",
             "unlock_death_merged",
@@ -52,10 +59,10 @@ public class MessageUtils {
             Map.entry("tpa_timeout_receiver", "&e&l请求超时 &8► &7来自 &f{sender} &7的传送请求已失效。"),
             Map.entry("tpa_timeout_sender", "&e&l请求超时 &8► &7玩家 &f{target} &7未及时回应你的请求。"),
             Map.entry("rtp_locked", "&c&l传送受限 &8► &7你当前处于传送锁定状态。"),
-            Map.entry("suicide_success", "&c&l你结束了自己的生命。"),
-            Map.entry("death_respawned", "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n           &c☠ &c&l你已死亡并完成复活 &c☠\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"),
-            Map.entry("unlock_death_merged", "&c&l你已死亡并于主城复活。\n&7随机传送（RTP）与玩家传送（TPA）限制已解除！"),
-            Map.entry("merged_offline_notice", "&e&l离线清理与权限状态更新\n&7你的背包与末影箱已清空，传送限制已解除。"),
+            Map.entry("suicide_success", "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&c☠ &c你结束了自己的生命并完成复活 &c☠\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"),
+            Map.entry("death_respawned", "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&c☠ &c你已死亡并完成复活 &c☠\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"),
+            Map.entry("unlock_death_merged", "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&c☠ &c你已死亡并于主城复活 &c☠\n&8▪ &7随机传送(RTP)与玩家传送(TPA)限制已解除！\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"),
+            Map.entry("merged_offline_notice", "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&e❖ 离线清理与权限状态更新 ❖\n&8▪ &7背包与末影箱已清空，传送限制已解除。\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"),
             Map.entry("command_failed", "&c&l指令失败 &8► &7该指令暂时无法执行，请联系管理员。")
     );
     private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
@@ -65,42 +72,63 @@ public class MessageUtils {
         Object obj = plugin.getLanguageManager().get(path);
         if (obj == null) obj = DEFAULT_MESSAGES.getOrDefault(path, DEFAULT_MESSAGES.get("command_failed"));
         boolean unprefixed = UNPREFIXED_MESSAGES.contains(path);
+        boolean centeredPanel = CENTERED_PANEL_MESSAGES.contains(path);
         String prefix = unprefixed ? "" : getString(plugin, "prefix", DEFAULT_PREFIX);
         if (!unprefixed && (prefix == null || prefix.isBlank())) prefix = DEFAULT_PREFIX;
 
         if (obj instanceof String) {
             String fullMsg = (String) obj;
             for (String line : fullMsg.split("\n")) {
-                sendSingleLine(sender, prefix + line, replacements);
+                String renderedLine = applyReplacements(line, replacements);
+                if (centeredPanel) renderedLine = MessageLayout.centerOnDivider(renderedLine);
+                sendSingleLine(sender, prefix + renderedLine);
             }
         } else if (obj instanceof List) {
             @SuppressWarnings("unchecked")
             List<String> list = (List<String>) obj;
             for (String line : list) {
-                sendSingleLine(sender, prefix + line, replacements);
+                sendSingleLine(sender, prefix + applyReplacements(line, replacements));
             }
         }
     }
 
     public static void sendRaw(CommandSender sender, String msg, String... replacements) {
-        sendSingleLine(sender, msg, replacements);
+        sendSingleLine(sender, applyReplacements(msg, replacements));
+    }
+
+    public static void sendCenteredRaw(CommandSender sender, String msg, String... replacements) {
+        sendSingleLine(sender, MessageLayout.centerOnDivider(applyReplacements(msg, replacements)));
     }
 
     public static String getString(WRTPKILL plugin, String path, String fallback) {
         return plugin.getLanguageManager().getString(path, fallback);
     }
 
-    private static void sendSingleLine(CommandSender sender, String msg, String... replacements) {
+    private static void sendSingleLine(CommandSender sender, String msg) {
         if (msg == null || msg.isEmpty()) return;
+        sender.sendMessage(deserializeBold(msg));
+    }
 
+    private static String applyReplacements(String message, String... replacements) {
+        if (message == null) return "";
         for (int i = 0; i < replacements.length; i += 2) {
             if (i + 1 < replacements.length) {
-                msg = msg.replace("{" + replacements[i] + "}", replacements[i + 1]);
+                message = message.replace("{" + replacements[i] + "}", replacements[i + 1]);
             }
         }
+        return message;
+    }
 
-        Component comp = SERIALIZER.deserialize(msg);
-        sender.sendMessage(comp);
+    private static Component deserializeBold(String message) {
+        return forceBold(SERIALIZER.deserialize(message));
+    }
+
+    private static Component forceBold(Component component) {
+        List<Component> children = component.children().stream()
+                .map(MessageUtils::forceBold)
+                .toList();
+        return component.children(children)
+                .decoration(TextDecoration.BOLD, TextDecoration.State.TRUE);
     }
 
     public static void sendTpaRequest(CommandSender sender, WRTPKILL plugin, String senderName) {
@@ -111,17 +139,21 @@ public class MessageUtils {
 
         Component acceptBtn = Component.text(getString(plugin, "tpa_accept_button", "【✔接受】"))
                 .color(NamedTextColor.GREEN)
+                .decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/tpaccept"))
                 .hoverEvent(HoverEvent.showText(Component.text(
                         getString(plugin, "tpa_accept_hover", "点击直接接受传送"))
-                        .color(NamedTextColor.GREEN)));
+                        .color(NamedTextColor.GREEN)
+                        .decorate(TextDecoration.BOLD)));
 
         Component denyBtn = Component.text(getString(plugin, "tpa_deny_button", "【✖拒绝】"))
                 .color(NamedTextColor.RED)
+                .decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/tpdeny"))
                 .hoverEvent(HoverEvent.showText(Component.text(
                         getString(plugin, "tpa_deny_hover", "点击直接拒绝传送"))
-                        .color(NamedTextColor.RED)));
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD)));
 
         if (obj instanceof String) {
             String fullMsg = (String) obj;
@@ -132,12 +164,12 @@ public class MessageUtils {
                     String before = line.substring(0, line.indexOf("{buttons}"));
                     String after = line.substring(line.indexOf("{buttons}") + "{buttons}".length());
 
-                    Component comp = SERIALIZER.deserialize(before)
+                    Component comp = deserializeBold(before)
                             .append(acceptBtn).append(Component.text("   ")).append(denyBtn)
-                            .append(SERIALIZER.deserialize(after));
-                    sender.sendMessage(comp);
+                            .append(deserializeBold(after));
+                    sender.sendMessage(forceBold(comp));
                 } else {
-                    sender.sendMessage(SERIALIZER.deserialize(line));
+                    sender.sendMessage(deserializeBold(line));
                 }
             }
         }

@@ -1,5 +1,6 @@
 # WRTPKILL English messages. This file is copied to plugins/WRTPKILL/lang/en_US.yml
 # on first launch and is never overwritten by plugin updates.
+# Every in-game WRTPKILL message is forced bold; color changes and resets do not disable it.
 messages:
   prefix: "&#00D2FF&l[&#3A7BD5&lWRTP&#00D2FF&l] &8&l| &r"
 
@@ -20,8 +21,8 @@ messages:
   spawn_set_confirm: "&8[&e!&8] &e&lConfirmation required &8> &7You are about to replace the global respawn point.\n&7Run &c/wrtp setspawn confirm &7within &c10 seconds&7."
   spawn_set_expired: "&8[&cX&8] &c&lCancelled &8> &7The respawn-point confirmation expired or was not started."
   spawn_set_success: "&8[&aOK&8] &a&lSaved &8> &7The current position is now the global respawn point."
-  suicide_success: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n         &c☠ &c&lYou ended your life and respawned &c☠\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
-  death_respawned: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n              &c☠ &c&lYou died and respawned &c☠\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
+  suicide_success: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&c☠ &c&lYou ended your life and respawned &c☠\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
+  death_respawned: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&c☠ &c&lYou died and respawned &c☠\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
 
   rtp_searching: "&8[&e*&8] &e&lSearching &8> &7Finding a safe destination..."
   rtp_success: "&8[&aOK&8] &aTeleported to &e{world} &aat X:{x} Y:{y} Z:{z}."
@@ -57,15 +58,15 @@ messages:
   tpa_deny_button: "[Deny]"
   tpa_deny_hover: "Click to deny the teleport request"
 
-  merged_offline_notice: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&e * &e&lOffline cleanup and access update &e*\n  &8- &7Reason: &cOffline duration exceeded\n  &8- &7Penalty: &cInventory and Ender Chest cleared; returned to spawn\n  &8- &7Benefit: &aRTP and TPA restrictions were removed\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
-  unlock_death_merged: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n           &c☠ &c&lYou died and respawned at spawn &c☠\n  &8- &7Your RTP and TPA restrictions were removed.\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
+  merged_offline_notice: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&e* &e&lOffline cleanup and access update &e*\n&8- &7Reason: &cOffline duration exceeded\n&8- &7Penalty: &cInventory cleared\n&8- &7Penalty: &cEnder Chest cleared\n&8- &7Result: &cReturned to spawn\n&8- &7Benefit: &aRTP and TPA unlocked\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
+  unlock_death_merged: "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&c☠ &c&lYou died and respawned at spawn &c☠\n&8- &7RTP and TPA restrictions removed.\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
 
-  pos_title: "             &#F8D34B&l✦ Online Positions ✦"
-  pos_none: "  &#FF5E62&lX No player positions are visible"
-  pos_world_header: " &#FF1744&l| &#D0D7DE&lWorld {world} &#7D5BA6&l({count} players)"
-  pos_player_entry: "   &#20E3B2&l* &f&l{player}{hidden} &#4C6580&l| {coordinates}"
+  pos_title: "&#F8D34B&l✦ Online Positions ✦"
+  pos_none: "&#FF5E62&lX No player positions are visible"
+  pos_world_header: "&#FF1744&l| &#D0D7DE&lWorld {world} &#7D5BA6&l({count} players)"
+  pos_player_entry: "&#20E3B2&l* &f&l{player}{hidden} &#4C6580&l| {coordinates}"
   pos_hidden_tag: " &#FF5E62&l[Hidden]"
-  pos_total: "             &#F8D34B&l✦ {count} players total ✦"
+  pos_total: "&#F8D34B&l✦ {count} players total ✦"
   nopos_public_1: "&a&lPosition visible &#34495E&l> &#95A5A6&lPosition privacy is now disabled."
   nopos_public_2: "&#95A5A6&lOther players can now see you with &#F2C94C&l/pos&#95A5A6&l."
   nopos_hidden_1: "&c&lPosition hidden &#34495E&l> &#95A5A6&lPosition privacy is now enabled."

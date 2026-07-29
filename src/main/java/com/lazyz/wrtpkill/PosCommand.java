@@ -1,6 +1,5 @@
 package com.lazyz.wrtpkill;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -19,8 +18,6 @@ import java.util.Map;
 public class PosCommand implements CommandExecutor {
     private final WRTPKILL plugin;
     private final NamespacedKey noPosKey;
-
-    private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().character('&').hexColors().build();
 
     public PosCommand(WRTPKILL plugin) {
         this.plugin = plugin;
@@ -114,11 +111,11 @@ public class PosCommand implements CommandExecutor {
     }
 
     private void sendMsg(Player player, String msg) {
-        player.sendMessage(serializer.deserialize(msg));
+        MessageUtils.sendRaw(player, msg);
     }
 
     private void sendLocalized(Player player, String path, String fallback, String... replacements) {
-        MessageUtils.sendRaw(player, MessageUtils.getString(plugin, path, fallback), replacements);
+        MessageUtils.sendCenteredRaw(player, MessageUtils.getString(plugin, path, fallback), replacements);
     }
 
     /** Matches the help-menu divider exactly, while keeping titles on their own non-wrapping line. */

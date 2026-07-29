@@ -1,6 +1,6 @@
 # WRTPKILL Administrator Guide / 管理员配置说明
 
-Version `1.2.0` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
+Version `1.2.1` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 
 ## English
 
@@ -19,6 +19,8 @@ The only official download page is `https://github.com/Lazyzouo/WRTPKILL/release
 ### Configuration ownership
 
 The repository's `src/main/resources/config.yml` contains official example values only. At runtime, Paper extracts it to `plugins/WRTPKILL/config.yml`. The `WRTPKILL-<version>-en.us.jar` and `WRTPKILL-<version>-zh.cn.jar` packages preserve the complete configuration and its comments; only their default `language` value differs. Existing runtime configuration and `plugins/WRTPKILL/lang/en_US.yml` are not overwritten during updates. Keep server-specific world names, coordinates, player names, and thresholds in the runtime copy, not in the source repository.
+
+When an existing `en_US.yml` still contains the exact official pre-1.2.1 offline/unlock divider-panel defaults, WRTPKILL substitutes the new centered layouts in memory. It does not write the migration back to disk and never changes customized text.
 
 ### Settings
 
@@ -51,6 +53,8 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 6. `/nopos` stores persistent privacy state. Administrators can still see hidden players and receive a hidden marker.
 7. The updater compares semantic versions from GitHub Releases. It selects `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` according to the active language, saves it under the running plugin JAR's filename in the update directory, and requires a restart to apply it.
 8. Startup, shutdown, and updater statuses share one colored `[WRTPKILL]` console prefix. The banner uses a consistent cyan palette; updater states use aqua, green, yellow, or red according to their result.
+9. Every in-game component is recursively forced bold after legacy colors are parsed, including help, dynamic help, TPA buttons and hover text, and position gradients.
+10. Non-help divider panels remove manual indentation and center each line after placeholder replacement against the divider's middle star. Help menus intentionally keep their list layout.
 
 ### Permissions and trust boundaries
 
@@ -67,6 +71,7 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 - The whitelist bypasses the lock check. A successful teleport can still leave a lock marker that will be bypassed while the player remains whitelisted.
 - Automatic updates require outbound HTTPS access to `api.github.com` and GitHub release assets. Each Release has exactly two manually uploaded packages, `WRTPKILL-<version>-en.us.jar` and `WRTPKILL-<version>-zh.cn.jar`; GitHub also exposes its unavoidable automatic source archives. Release JARs are uploaded directly from Gradle output and must never be renamed. The updater cannot replace the active JAR until server restart.
 - Offline cleanup permanently clears inventory and Ender Chest. Test the interval and backup policy before enabling it on a production server.
+- Custom divider-panel lines should remain within 39 visible characters. Longer custom text must be split with `\n`; custom resource-pack fonts can shift the visual result because centering is based on visible character columns rather than client-specific pixel metrics.
 - Paper/Folia `1.21.11` and Java 21 are the supported target. Older versions and unrelated server implementations are not guaranteed.
 
 ## 中文
@@ -86,6 +91,8 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 ### 配置归属
 
 仓库内 `src/main/resources/config.yml` 只保存官方示例参数。`WRTPKILL-<版本>-en.us.jar` 与 `WRTPKILL-<版本>-zh.cn.jar` 都保留完整配置及其注释，只有默认 `language` 值不同。服务端运行时会在 `plugins/WRTPKILL/config.yml` 生成独立配置；更新插件不会覆盖现有运行配置，也不会覆盖 `plugins/WRTPKILL/lang/en_US.yml`。服务器专用世界名、坐标、玩家名和阈值应只写入运行目录，不应提交到源码仓库。
+
+当现有 `en_US.yml` 仍使用 1.2.1 之前完全一致的官方离线/解锁分割线面板默认值时，WRTPKILL 会仅在内存中替换为新版居中布局；不会写回磁盘，也不会修改任何自定义文本。
 
 ### 配置项
 
@@ -119,6 +126,9 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 7. 更新器按语义版本比较 GitHub Release，根据当前语言选择 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`，沿用正在运行的插件 JAR 文件名保存到更新目录，重启后应用。
 8. 启动、卸载和更新器状态统一使用彩色 `[WRTPKILL]` 后台前缀；横幅保持青色系一致，更新状态按结果使用青、绿、黄或红色。
 
+9. 所有游戏内组件在解析颜色后都会递归强制加粗，包括帮助、动态帮助、TPA 按钮及悬停说明和坐标渐变。
+10. 除帮助外，分割线面板会先移除手工缩进，在替换动态变量后以分割线中央星星为基准逐行居中；帮助菜单保留列表排版。
+
 ### 权限边界
 
 - `worldrtp.admin` 默认仅 OP 拥有，用于所有修改配置的管理子指令。
@@ -134,4 +144,5 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 - 白名单绕过锁定检查；成功传送后仍可能写入锁标记，但玩家留在白名单期间会继续绕过。
 - 自动更新需要访问 `api.github.com` 和 GitHub Release 资源；每个 Release 只手动上传 `WRTPKILL-<版本>-en.us.jar` 与 `WRTPKILL-<版本>-zh.cn.jar`，GitHub 仍会显示无法关闭的自动源码压缩包。Release JAR 必须直接上传 Gradle 原产物，禁止改名。活动中的 JAR 必须等服务端重启才能替换。
 - 离线清理会永久清空背包与末影箱，生产服启用前必须确认阈值并做好备份。
+- 自定义分割线面板的每行应保持在 39 个可见字符以内；更长文本必须使用 `\n` 拆行。自定义资源包字体的字形宽度可能改变视觉效果，因为居中依据可见字符列，而不是客户端专用像素宽度。
 - 官方目标是 Paper/Folia `1.21.11` 与 Java 21，不保证兼容旧版或其他服务端实现。

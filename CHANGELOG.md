@@ -4,6 +4,38 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.2.1] - 2026-07-29
+
+### English
+
+#### Added
+
+- Recursive bold enforcement for every in-game WRTPKILL component, including help menus, dynamic RTP help, ordinary feedback, TPA buttons and hover text, and position gradients.
+- Divider-star centering that removes manual indentation and recalculates each non-help panel line after dynamic placeholders are replaced.
+- Layout tests for legacy and hex color codes, existing indentation removal, exact divider width, and every official Chinese and English centered-panel line.
+
+#### Changed
+
+- `/pos` now routes its divider, titles, world groups, player coordinates, empty state, and totals through the shared bold and centered message pipeline.
+- Overlong English offline and unlock panels were split into centered lines within the 39-character divider width.
+- Existing unmodified pre-1.2.1 English offline/unlock panel defaults are upgraded in memory without writing to `en_US.yml`; customized messages remain untouched.
+- Project version and documentation compatibility labels updated to `1.2.1`.
+
+### 中文
+
+#### 新增
+
+- 对所有 WRTPKILL 游戏内组件递归强制加粗，包括帮助菜单、动态 RTP 帮助、普通反馈、TPA 按钮及悬停说明和坐标渐变。
+- 新增基于分割线中央星星的自动居中：移除旧手工缩进，并在替换动态变量后重新计算所有非帮助面板内文。
+- 新增颜色码、十六进制颜色、旧缩进清理、准确分割线宽度及全部中英文官方面板行的布局回归测试。
+
+#### 调整
+
+- `/pos` 的分割线、标题、世界分类、玩家坐标、空状态和总计均改走共享粗体与居中消息管线。
+- 将过长的英文离线与解锁面板拆分为不超过 39 个可见字符的居中行。
+- 现有未修改的 1.2.1 之前英文官方离线/解锁面板默认值会仅在内存中升级，不写入 `en_US.yml`，自定义消息保持不变。
+- 项目版本与文档兼容性标识更新为 `1.2.1`。
+
 ## [1.2.0] - 2026-07-29
 
 ### English
@@ -158,4 +190,5 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.2.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.1
 [1.2.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.0
