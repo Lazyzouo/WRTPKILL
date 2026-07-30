@@ -49,7 +49,7 @@ public class PosCommand implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("pos")) {
             sendMsg(player, "");
             sendMsg(player, divider());
-            sendLocalized(player, "pos_title", "              &#F8D34B&l✦ 全服位置总览 ✦");
+            sendLocalized(player, "pos_title", "&#F8D34B&l✦ 全服位置总览 ✦");
 
             boolean isOp = player.isOp() || player.hasPermission("worldrtp.admin");
 
@@ -70,14 +70,14 @@ public class PosCommand implements CommandExecutor {
             }
 
             if (count == 0) {
-                sendLocalized(player, "pos_none", "  &#FF5E62&l✖ 暂无可显示的玩家位置");
+                sendLocalized(player, "pos_none", "&#FF5E62&l✖ 暂无可显示的玩家位置");
             } else {
                 for (Map.Entry<String, List<Player>> entry : worldGroups.entrySet()) {
                     String worldName = entry.getKey();
                     List<Player> playersInWorld = entry.getValue();
 
                     sendLocalized(player, "pos_world_header",
-                            " &#FF1744&l▎ &#D0D7DE&l世界 {world} &#7D5BA6&l({count} 人)",
+                            "&#FF1744&l▎ &#D0D7DE&l世界 {world} &#7D5BA6&l({count} 人)",
                             "world", gradient(worldName, 0xFF1744, 0xFF6B81),
                             "count", String.valueOf(playersInWorld.size()));
 
@@ -90,7 +90,7 @@ public class PosCommand implements CommandExecutor {
                         String coordinates = String.format("X %d • Y %d • Z %d",
                                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
                         sendLocalized(player, "pos_player_entry",
-                                "   &#20E3B2&l✦ &f&l{player}{hidden} &#4C6580&l┃ {coordinates}",
+                                "&#20E3B2&l✦ &f&l{player}{hidden} &#4C6580&l┃ {coordinates}",
                                 "player", target.getName(), "hidden", hiddenTag,
                                 "coordinates", gradient(coordinates, 0x7CFF6B, 0x00C853));
                     }
@@ -99,7 +99,7 @@ public class PosCommand implements CommandExecutor {
                 }
             }
 
-            sendLocalized(player, "pos_total", "              &#F8D34B&l✦ 共 {count} 名玩家 ✦",
+            sendLocalized(player, "pos_total", "&#F8D34B&l✦ 共 {count} 名玩家 ✦",
                     "count", String.valueOf(count));
             sendMsg(player, divider());
             sendMsg(player, "");
@@ -115,7 +115,7 @@ public class PosCommand implements CommandExecutor {
     }
 
     private void sendLocalized(Player player, String path, String fallback, String... replacements) {
-        MessageUtils.sendCenteredRaw(player, MessageUtils.getString(plugin, path, fallback), replacements);
+        MessageUtils.sendLeftAlignedRaw(player, MessageUtils.getString(plugin, path, fallback), replacements);
     }
 
     /** Matches the help-menu divider exactly, while keeping titles on their own non-wrapping line. */

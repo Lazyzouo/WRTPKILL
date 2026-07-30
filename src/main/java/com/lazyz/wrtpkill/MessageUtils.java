@@ -23,7 +23,7 @@ public class MessageUtils {
             "unlock_death_merged",
             "merged_offline_notice"
     );
-    private static final Set<String> CENTERED_PANEL_MESSAGES = Set.of(
+    private static final Set<String> LEFT_ALIGNED_PANEL_MESSAGES = Set.of(
             "suicide_success",
             "death_respawned",
             "unlock_death_merged",
@@ -72,7 +72,7 @@ public class MessageUtils {
         Object obj = plugin.getLanguageManager().get(path);
         if (obj == null) obj = DEFAULT_MESSAGES.getOrDefault(path, DEFAULT_MESSAGES.get("command_failed"));
         boolean unprefixed = UNPREFIXED_MESSAGES.contains(path);
-        boolean centeredPanel = CENTERED_PANEL_MESSAGES.contains(path);
+        boolean leftAlignedPanel = LEFT_ALIGNED_PANEL_MESSAGES.contains(path);
         String prefix = unprefixed ? "" : getString(plugin, "prefix", DEFAULT_PREFIX);
         if (!unprefixed && (prefix == null || prefix.isBlank())) prefix = DEFAULT_PREFIX;
 
@@ -80,7 +80,7 @@ public class MessageUtils {
             String fullMsg = (String) obj;
             for (String line : fullMsg.split("\n")) {
                 String renderedLine = applyReplacements(line, replacements);
-                if (centeredPanel) renderedLine = MessageLayout.centerOnDivider(renderedLine);
+                if (leftAlignedPanel) renderedLine = MessageLayout.leftAlign(renderedLine);
                 sendSingleLine(sender, prefix + renderedLine);
             }
         } else if (obj instanceof List) {
@@ -96,8 +96,8 @@ public class MessageUtils {
         sendSingleLine(sender, applyReplacements(msg, replacements));
     }
 
-    public static void sendCenteredRaw(CommandSender sender, String msg, String... replacements) {
-        sendSingleLine(sender, MessageLayout.centerOnDivider(applyReplacements(msg, replacements)));
+    public static void sendLeftAlignedRaw(CommandSender sender, String msg, String... replacements) {
+        sendSingleLine(sender, MessageLayout.leftAlign(applyReplacements(msg, replacements)));
     }
 
     public static String getString(WRTPKILL plugin, String path, String fallback) {

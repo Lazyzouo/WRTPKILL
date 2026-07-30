@@ -146,12 +146,12 @@ public class WRTPKILL extends JavaPlugin {
         String oldDefault = "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n"
                 + "&c ☠ &c&l你已死亡并完成复活 &c☠\n"
                 + "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━";
-        String centeredDefault = "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n"
-                + "           &c☠ &c&l你已死亡并完成复活 &c☠\n"
+        String leftAlignedDefault = "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n"
+                + "&c☠ &c&l你已死亡并完成复活 &c☠\n"
                 + "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━";
 
         if (oldDefault.equals(getConfig().getString(path))) {
-            getConfig().set(path, centeredDefault);
+            getConfig().set(path, leftAlignedDefault);
         }
     }
 }

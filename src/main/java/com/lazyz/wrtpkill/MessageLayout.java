@@ -1,21 +1,12 @@
 package com.lazyz.wrtpkill;
 
 final class MessageLayout {
-    private static final String DIVIDER_TEXT = "━━━━━━━━━━━━━━━━━━ ✧ ━━━━━━━━━━━━━━━━━━";
-    private static final int DIVIDER_WIDTH = visibleLength(DIVIDER_TEXT);
-
     private MessageLayout() {
     }
 
-    static String centerOnDivider(String legacyText) {
+    static String leftAlign(String legacyText) {
         if (legacyText == null || legacyText.isEmpty()) return legacyText;
-
-        String content = stripVisibleLeadingWhitespace(legacyText);
-        int contentWidth = visibleLength(content);
-        if (contentWidth == 0) return "";
-
-        int padding = Math.max(0, (DIVIDER_WIDTH - contentWidth) / 2);
-        return " ".repeat(padding) + content;
+        return stripVisibleLeadingWhitespace(legacyText);
     }
 
     static int visibleLength(String legacyText) {

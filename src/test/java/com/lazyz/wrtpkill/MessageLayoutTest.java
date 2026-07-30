@@ -15,20 +15,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MessageLayoutTest {
     @Test
-    void centersColoredTextOnTheDividerStar() {
+    void keepsUnindentedColoredTextLeftAligned() {
         String line = "&c☠ &c&l你已死亡并完成复活 &c☠";
 
-        assertEquals(" ".repeat(13) + line, MessageLayout.centerOnDivider(line));
+        assertEquals(line, MessageLayout.leftAlign(line));
     }
 
     @Test
-    void removesManualIndentBeforeCalculatingDynamicCentering() {
+    void removesManualIndentWithoutAddingAlignmentPadding() {
         String line = "           &#F8D34B&l✦ Online Positions ✦";
 
-        String centered = MessageLayout.centerOnDivider(line);
+        String leftAligned = MessageLayout.leftAlign(line);
 
-        assertEquals((39 - 20) / 2, centered.indexOf('&'));
-        assertEquals(20, MessageLayout.visibleLength(centered.trim()));
+        assertEquals("&#F8D34B&l✦ Online Positions ✦", leftAligned);
+        assertEquals(20, MessageLayout.visibleLength(leftAligned));
     }
 
     @Test
@@ -36,12 +36,12 @@ class MessageLayoutTest {
         String divider = "&b━━━━━━━━━━━━━━━━━━ &e✧ &b━━━━━━━━━━━━━━━━━━";
 
         assertEquals(39, MessageLayout.visibleLength(divider));
-        assertEquals(divider, MessageLayout.centerOnDivider(divider));
+        assertEquals(divider, MessageLayout.leftAlign(divider));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    void officialCenteredPanelLinesFitTheDividerWidth() throws IOException {
+    void officialPanelLinesAreLeftAlignedAndFitTheDividerWidth() throws IOException {
         List<String> messageKeys = List.of(
                 "suicide_success",
                 "death_respawned",
@@ -63,6 +63,8 @@ class MessageLayoutTest {
                 for (String key : messageKeys) {
                     String message = (String) messages.get(key);
                     for (String line : message.split("\\n")) {
+                        assertEquals(line.stripLeading(), line,
+                                () -> path + " messages." + key + " is indented: " + line);
                         assertTrue(MessageLayout.visibleLength(line) <= 39,
                                 () -> path + " messages." + key + " exceeds the divider width: " + line);
                     }

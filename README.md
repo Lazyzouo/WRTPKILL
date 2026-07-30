@@ -43,7 +43,7 @@ The plugin is a training-server operations layer, not a combat engine or anti-ch
 | Tested/target Minecraft version | `1.21.11` |
 | Server software | Paper or Folia |
 | Java | 21 or newer |
-| Plugin version | `1.2.4` |
+| Plugin version | `1.2.5` |
 
 The project compiles against Paper API `1.21.11`. Compatibility with forks or older Minecraft versions is not guaranteed.
 
@@ -57,7 +57,7 @@ The project compiles against Paper API `1.21.11`. Compatibility with forks or ol
 - Optional forced respawn, shared spawn, first-join teleport, and offline inventory cleanup.
 - Simplified Chinese and English user interfaces.
 - Every in-game WRTPKILL message is recursively forced bold, including help text, dynamic help entries, buttons, hover text, and position gradients.
-- All non-help divider panels center their text after placeholder replacement against the divider's middle star; help keeps its established list layout.
+- All in-game layouts are left aligned. Divider panels and `/pos` remove legacy leading spaces after placeholder replacement, while help keeps command-list indentation.
 - Compact fixed-width color-coded startup banner with a centered bilingual administration header, section divider, and complete left/right borders, plus update status messages with one consistent `[WRTPKILL]` console prefix.
 - Startup update checks with automatic download to the server update directory.
 - Folia-aware command, teleport, and player scheduling.
@@ -125,7 +125,7 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 | 测试/目标 Minecraft 版本 | `1.21.11` |
 | 服务端 | Paper 或 Folia |
 | Java | 21 或更高版本 |
-| 插件版本 | `1.2.4` |
+| 插件版本 | `1.2.5` |
 
 项目使用 Paper API `1.21.11` 编译；不保证兼容旧版 Minecraft 或所有第三方分支。
 
@@ -139,7 +139,7 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 - 可选强制复活、统一复活点、首次进服传送和离线背包清理。
 - 简体中文与英文界面。
 - 所有 WRTPKILL 游戏内文本均由组件发送层递归强制加粗，包括帮助菜单、动态帮助、按钮、悬停说明与坐标渐变。
-- 除帮助菜单外，所有带分割线的面板都会在替换动态变量后，以分割线中央星星为基准自动居中；帮助菜单保留原列表排版。
+- 所有游戏内布局均改为左对齐。分割线面板与 `/pos` 会在替换动态变量后清除旧行首空格，帮助菜单仅保留命令列表层级缩进。
 - 使用带居中双语管理标题、区段分隔线及完整左右边框的紧凑固定宽度彩色启动横幅，并为更新状态提示统一使用 `[WRTPKILL]` 后台前缀。
 - 开服自动检查更新并下载到服务端更新目录。
 - 兼容 Folia 的调度与异步传送流程。

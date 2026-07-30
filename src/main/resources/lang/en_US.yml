@@ -1,6 +1,7 @@
 # WRTPKILL English messages. This file is copied to plugins/WRTPKILL/lang/en_US.yml
 # on first launch and is never overwritten by plugin updates.
 # Every in-game WRTPKILL message is forced bold; color changes and resets do not disable it.
+# Divider panels and /pos remove leading spaces and align left; help keeps command-list indentation.
 messages:
   prefix: "&#00D2FF&l[&#3A7BD5&lWRTP&#00D2FF&l] &8&l| &r"
 

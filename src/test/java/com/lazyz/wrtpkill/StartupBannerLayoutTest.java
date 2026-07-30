@@ -13,11 +13,11 @@ class StartupBannerLayoutTest {
         List<String> lines = List.of(
                 StartupBannerLayout.border(),
                 StartupBannerLayout.centeredLine(
-                        "&b&lWRTPKILL TELEPORT MANAGEMENT v1.2.4"),
+                        "&b&lWRTPKILL TELEPORT MANAGEMENT v1.2.5"),
                 StartupBannerLayout.centeredLine(
                         "&f&lTELEPORT & RESPAWN CONTROL &8/ &f&l传送与复活管理"),
                 StartupBannerLayout.sectionDivider(),
-                StartupBannerLayout.line("&fVersion / 版本 &8: &a1.2.4"),
+                StartupBannerLayout.line("&fVersion / 版本 &8: &a1.2.5"),
                 StartupBannerLayout.line("&fAuthor  / 作者 &8: &eLazyz"),
                 StartupBannerLayout.line(
                         "&fTested  / 测试 &8: &aPaper & Folia 1.21.11"),

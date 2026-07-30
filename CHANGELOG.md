@@ -4,6 +4,24 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.2.5] - 2026-07-30
+
+### English
+
+#### Changed
+
+- Removed in-game centering and left-aligned divider panels and `/pos` output.
+- Divider panels and `/pos` now remove legacy leading spaces after placeholder replacement; help preserves command-list indentation and the console startup banner remains centered.
+- Updated layout regression coverage and project version labels to `1.2.5`.
+
+### 中文
+
+#### 调整
+
+- 取消游戏内文本居中，将分割线面板与 `/pos` 输出统一改为左对齐。
+- 分割线面板与 `/pos` 会在替换动态变量后清除旧行首空格；帮助菜单保留命令列表缩进，控制台启动横幅继续居中。
+- 更新布局回归测试，并将项目版本标识更新为 `1.2.5`。
+
 ## [1.2.4] - 2026-07-30
 
 ### English
@@ -244,6 +262,7 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.2.5]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.5
 [1.2.4]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.4
 [1.2.3]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.3
 [1.2.2]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.2
