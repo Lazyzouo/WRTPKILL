@@ -115,7 +115,7 @@ public class PosCommand implements CommandExecutor {
     }
 
     private void sendLocalized(Player player, String path, String fallback, String... replacements) {
-        MessageUtils.sendLeftAlignedRaw(player, MessageUtils.getString(plugin, path, fallback), replacements);
+        MessageUtils.sendRaw(player, MessageUtils.getString(plugin, path, fallback), replacements);
     }
 
     /** Matches the help-menu divider exactly, while keeping titles on their own non-wrapping line. */

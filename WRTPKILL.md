@@ -1,6 +1,6 @@
 # WRTPKILL Administrator Guide / 管理员配置说明
 
-Version `1.2.5` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
+Version `1.2.6` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 
 ## English
 
@@ -54,7 +54,7 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 7. The updater compares semantic versions from GitHub Releases. It selects `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` according to the active language, saves it under the running plugin JAR's filename in the update directory, and requires a restart to apply it.
 8. Startup, shutdown, and updater statuses share one colored `[WRTPKILL]` console prefix. The compact banner uses an inner width of 60 visible console columns, a centered bilingual control header, a dashed section divider, and complete cyan left/right borders; updater states use aqua, green, yellow, or red according to their result.
 9. Every in-game component is recursively forced bold after legacy colors are parsed, including help, dynamic help, TPA buttons and hover text, and position gradients.
-10. All in-game layouts are left aligned. Divider panels and `/pos` remove manual leading spaces after placeholder replacement; help menus preserve only their command-list indentation. The console startup banner remains centered.
+10. Every in-game message line passes through one final left-alignment stage. It removes visible leading whitespace from help, divider panels, `/pos`, ordinary feedback, and interactive TPA labels or hover text, including whitespace placed after formatting codes. The console startup banner uses a separate path and remains centered.
 
 ### Permissions and trust boundaries
 
@@ -127,7 +127,7 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 8. 启动、卸载和更新器状态统一使用彩色 `[WRTPKILL]` 后台前缀；紧凑横幅采用 60 个可见控制台列的内部宽度，并包含居中双语管理标题、虚线区段分隔和完整青色左右边框；更新状态按结果使用青、绿、黄或红色。
 
 9. 所有游戏内组件在解析颜色后都会递归强制加粗，包括帮助、动态帮助、TPA 按钮及悬停说明和坐标渐变。
-10. 所有游戏内布局均改为左对齐。分割线面板与 `/pos` 会在替换动态变量后清除手工行首空格；帮助菜单仅保留命令列表层级缩进。控制台启动横幅继续居中。
+10. 所有游戏内消息都会经过统一的最终左对齐阶段，清除帮助菜单、分割线面板、`/pos`、普通反馈、TPA 按钮及悬停文本的可见行首空格，包括写在颜色代码之后的空格。服务器后台启动横幅走独立路径并继续居中。
 
 ### 权限边界
 

@@ -4,6 +4,24 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.2.6] - 2026-07-30
+
+### English
+
+#### Fixed
+
+- Routed every in-game message line through the final left-alignment stage instead of limiting the behavior to selected divider panels.
+- Removed leading whitespace from help, dynamic help, ordinary feedback, divider panels, `/pos`, and TPA buttons or hover text, including whitespace after formatting codes.
+- Kept the server-console startup banner unchanged and updated project version labels to `1.2.6`.
+
+### 中文
+
+#### 修复
+
+- 将每一条游戏内消息统一接入最终左对齐阶段，不再只处理指定的分割线面板。
+- 清除帮助、动态帮助、普通反馈、分割线面板、`/pos`、TPA 按钮及悬停文本的行首空格，包括颜色代码之后的空格。
+- 保持服务器后台启动横幅不变，并将项目版本标识更新为 `1.2.6`。
+
 ## [1.2.5] - 2026-07-30
 
 ### English
@@ -262,6 +280,7 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.2.6]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.6
 [1.2.5]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.5
 [1.2.4]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.4
 [1.2.3]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.3

@@ -23,12 +23,6 @@ public class MessageUtils {
             "unlock_death_merged",
             "merged_offline_notice"
     );
-    private static final Set<String> LEFT_ALIGNED_PANEL_MESSAGES = Set.of(
-            "suicide_success",
-            "death_respawned",
-            "unlock_death_merged",
-            "merged_offline_notice"
-    );
     private static final Map<String, String> DEFAULT_MESSAGES = Map.ofEntries(
             Map.entry("only_player", "&c&l操作失败 &8► &7该指令仅限玩家使用！"),
             Map.entry("not_player", "&c&l操作失败 &8► &7该指令仅限玩家使用！"),
@@ -72,22 +66,21 @@ public class MessageUtils {
         Object obj = plugin.getLanguageManager().get(path);
         if (obj == null) obj = DEFAULT_MESSAGES.getOrDefault(path, DEFAULT_MESSAGES.get("command_failed"));
         boolean unprefixed = UNPREFIXED_MESSAGES.contains(path);
-        boolean leftAlignedPanel = LEFT_ALIGNED_PANEL_MESSAGES.contains(path);
         String prefix = unprefixed ? "" : getString(plugin, "prefix", DEFAULT_PREFIX);
+        prefix = MessageLayout.leftAlign(prefix);
         if (!unprefixed && (prefix == null || prefix.isBlank())) prefix = DEFAULT_PREFIX;
 
         if (obj instanceof String) {
             String fullMsg = (String) obj;
             for (String line : fullMsg.split("\n")) {
-                String renderedLine = applyReplacements(line, replacements);
-                if (leftAlignedPanel) renderedLine = MessageLayout.leftAlign(renderedLine);
+                String renderedLine = MessageLayout.leftAlign(applyReplacements(line, replacements));
                 sendSingleLine(sender, prefix + renderedLine);
             }
         } else if (obj instanceof List) {
             @SuppressWarnings("unchecked")
             List<String> list = (List<String>) obj;
             for (String line : list) {
-                sendSingleLine(sender, prefix + applyReplacements(line, replacements));
+                sendSingleLine(sender, prefix + MessageLayout.leftAlign(applyReplacements(line, replacements)));
             }
         }
     }
@@ -96,17 +89,14 @@ public class MessageUtils {
         sendSingleLine(sender, applyReplacements(msg, replacements));
     }
 
-    public static void sendLeftAlignedRaw(CommandSender sender, String msg, String... replacements) {
-        sendSingleLine(sender, MessageLayout.leftAlign(applyReplacements(msg, replacements)));
-    }
-
     public static String getString(WRTPKILL plugin, String path, String fallback) {
         return plugin.getLanguageManager().getString(path, fallback);
     }
 
     private static void sendSingleLine(CommandSender sender, String msg) {
-        if (msg == null || msg.isEmpty()) return;
-        sender.sendMessage(deserializeBold(msg));
+        String leftAligned = MessageLayout.leftAlign(msg);
+        if (leftAligned == null || leftAligned.isEmpty()) return;
+        sender.sendMessage(deserializeBold(leftAligned));
     }
 
     private static String applyReplacements(String message, String... replacements) {
@@ -137,28 +127,29 @@ public class MessageUtils {
         String prefix = getString(plugin, "prefix", DEFAULT_PREFIX);
         if (prefix == null || prefix.isBlank()) prefix = DEFAULT_PREFIX;
 
-        Component acceptBtn = Component.text(getString(plugin, "tpa_accept_button", "【✔接受】"))
+        prefix = MessageLayout.leftAlign(prefix);
+        Component acceptBtn = Component.text(MessageLayout.leftAlign(getString(plugin, "tpa_accept_button", "【✔接受】")))
                 .color(NamedTextColor.GREEN)
                 .decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/tpaccept"))
                 .hoverEvent(HoverEvent.showText(Component.text(
-                        getString(plugin, "tpa_accept_hover", "点击直接接受传送"))
+                        MessageLayout.leftAlign(getString(plugin, "tpa_accept_hover", "点击直接接受传送")))
                         .color(NamedTextColor.GREEN)
                         .decorate(TextDecoration.BOLD)));
 
-        Component denyBtn = Component.text(getString(plugin, "tpa_deny_button", "【✖拒绝】"))
+        Component denyBtn = Component.text(MessageLayout.leftAlign(getString(plugin, "tpa_deny_button", "【✖拒绝】")))
                 .color(NamedTextColor.RED)
                 .decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/tpdeny"))
                 .hoverEvent(HoverEvent.showText(Component.text(
-                        getString(plugin, "tpa_deny_hover", "点击直接拒绝传送"))
+                        MessageLayout.leftAlign(getString(plugin, "tpa_deny_hover", "点击直接拒绝传送")))
                         .color(NamedTextColor.RED)
                         .decorate(TextDecoration.BOLD)));
 
         if (obj instanceof String) {
             String fullMsg = (String) obj;
             for (String line : fullMsg.split("\n")) {
-                line = prefix + line.replace("{player}", senderName);
+                line = prefix + MessageLayout.leftAlign(line.replace("{player}", senderName));
 
                 if (line.contains("{buttons}")) {
                     String before = line.substring(0, line.indexOf("{buttons}"));

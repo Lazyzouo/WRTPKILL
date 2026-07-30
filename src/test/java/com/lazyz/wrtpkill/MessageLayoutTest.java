@@ -29,6 +29,8 @@ class MessageLayoutTest {
 
         assertEquals("&#F8D34B&l✦ Online Positions ✦", leftAligned);
         assertEquals(20, MessageLayout.visibleLength(leftAligned));
+        assertEquals("&eHelp entry", MessageLayout.leftAlign("&e   Help entry"));
+        assertEquals("&f/tpa <player>", MessageLayout.leftAlign("  &f/tpa <player>"));
     }
 
     @Test
