@@ -4,6 +4,24 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.2.4] - 2026-07-30
+
+### English
+
+#### Changed
+
+- Reduced the startup-banner inner width from 76 to 60 visible console columns for a more compact server-console footprint.
+- Preserved the bilingual header, dashed section divider, complete right border, and spacing around every official detail row.
+- Updated banner regression coverage and project version labels to `1.2.4`.
+
+### 中文
+
+#### 调整
+
+- 将启动横幅内部宽度从 76 个可见控制台列缩减至 60 个，降低其在服务器控制台中的横向占比。
+- 保留双语顶部标题、虚线区段分隔、完整右边框及所有官方详情行的安全留白。
+- 更新横幅回归测试，并将项目版本标识更新为 `1.2.4`。
+
 ## [1.2.3] - 2026-07-30
 
 ### English
@@ -226,6 +244,7 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.2.4]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.4
 [1.2.3]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.3
 [1.2.2]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.2
 [1.2.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.1
