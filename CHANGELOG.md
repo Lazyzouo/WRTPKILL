@@ -4,6 +4,26 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.3.0] - 2026-08-04
+
+### English
+
+#### Added
+
+- Added automatic three-way `config.yml` upgrades using the bundled defaults, current user configuration, and a local previous-default baseline.
+- Preserved all existing values, lists, custom keys, custom worlds, and remembered deletions while inserting newly introduced official paths and comments.
+- Added temporary-file and atomic-replacement writes so a failed update cannot partially overwrite the active configuration.
+- Added merge regression coverage for first-time upgrades, changed defaults, deleted nodes, custom worlds, lists, and empty sections.
+
+### 中文
+
+#### 新增
+
+- 新增 `config.yml` 自动三方升级，比较新版内置默认配置、当前用户配置和本地上一版官方默认值基线。
+- 合并新版官方路径与注释时，保留全部现有参数、列表、自定义节点、自定义世界和已记录的删除项。
+- 新增临时文件与原子替换写入，配置升级失败时不会产生只写入一部分的活动配置。
+- 新增首次升级、默认值变化、节点删除、自定义世界、列表与空配置段的合并回归测试。
+
 ## [1.2.6] - 2026-07-30
 
 ### English
@@ -280,6 +300,7 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.3.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.3.0
 [1.2.6]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.6
 [1.2.5]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.5
 [1.2.4]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.4

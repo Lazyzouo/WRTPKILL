@@ -43,7 +43,7 @@ The plugin is a training-server operations layer, not a combat engine or anti-ch
 | Tested/target Minecraft version | `1.21.11` |
 | Server software | Paper or Folia |
 | Java | 21 or newer |
-| Plugin version | `1.2.6` |
+| Plugin version | `1.3.0` |
 
 The project compiles against Paper API `1.21.11`. Compatibility with forks or older Minecraft versions is not guaranteed.
 
@@ -56,6 +56,7 @@ The project compiles against Paper API `1.21.11`. Compatibility with forks or ol
 - `/pos` world grouping, red world-name gradients, green coordinate gradients, and privacy through `/nopos`.
 - Optional forced respawn, shared spawn, first-join teleport, and offline inventory cleanup.
 - Simplified Chinese and English user interfaces.
+- Automatic three-way configuration upgrades that add new official settings and comments while preserving every existing value, custom world, custom key, and deliberate deletion.
 - Every in-game WRTPKILL message is recursively forced bold, including help text, dynamic help entries, buttons, hover text, and position gradients.
 - Every in-game message line is left aligned at final send time. Legacy leading spaces are removed from help, divider panels, `/pos`, ordinary feedback, and interactive TPA text; the console startup banner is unchanged.
 - Compact fixed-width color-coded startup banner with a centered bilingual administration header, section divider, and complete left/right borders, plus update status messages with one consistent `[WRTPKILL]` console prefix.
@@ -69,7 +70,7 @@ The project compiles against Paper API `1.21.11`. Compatibility with forks or ol
 3. Start the server once to generate the configuration.
 4. Restart the server. Use `/wrtp help` in game.
 
-Both packages contain the same complete code, resources, configuration comments, and official default parameters. They differ only in the default `language` value. The plugin never overwrites an existing runtime configuration or language file. Repository defaults contain only official example values; a server owner's private values live outside this source repository.
+Both packages contain the same complete code, resources, configuration comments, and official default parameters. They differ only in the default `language` value. At startup, WRTPKILL safely rebuilds `config.yml` only when the official schema changes, merging new settings and comments without replacing existing values, custom nodes, or remembered deletions. Repository defaults contain only official example values; a server owner's private values live outside this source repository.
 
 ### Main commands
 
@@ -91,6 +92,8 @@ See [WRTPKILL.md](WRTPKILL.md) for all settings, behavior, limits, update rules,
 ### Automatic updates
 
 At startup, WRTPKILL checks the latest GitHub Release. If a newer semantic version exists and `updater.auto-download` is enabled, it downloads `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` to match the configured language, then stages it under the running plugin JAR's filename in the update directory. The server must be restarted to apply it. Checking, latest-version, update-available, download-success, manual-download, and failure states use colored console messages with the official release URL when needed.
+
+After restart, the configuration upgrader uses `plugins/WRTPKILL/.wrtpkill-default-config.yml` as an official-default baseline. Configuration writes use a temporary file and atomic replacement; invalid YAML is left untouched and reported in the console instead of being replaced.
 
 ### Build from source
 
@@ -125,7 +128,7 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 | 测试/目标 Minecraft 版本 | `1.21.11` |
 | 服务端 | Paper 或 Folia |
 | Java | 21 或更高版本 |
-| 插件版本 | `1.2.6` |
+| 插件版本 | `1.3.0` |
 
 项目使用 Paper API `1.21.11` 编译；不保证兼容旧版 Minecraft 或所有第三方分支。
 
@@ -138,6 +141,7 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 - `/pos` 按世界分组，世界名红色渐变、坐标绿色渐变，支持 `/nopos` 隐藏。
 - 可选强制复活、统一复活点、首次进服传送和离线背包清理。
 - 简体中文与英文界面。
+- 自动三方配置升级：合并新版官方参数与注释，同时保留现有参数、自定义世界、自定义节点和主动删除项。
 - 所有 WRTPKILL 游戏内文本均由组件发送层递归强制加粗，包括帮助菜单、动态帮助、按钮、悬停说明与坐标渐变。
 - 所有游戏内消息都会在最终发送时逐行左对齐。帮助菜单、分割线面板、`/pos`、普通反馈与 TPA 交互文本中的旧行首空格都会被清除；服务器后台启动横幅不变。
 - 使用带居中双语管理标题、区段分隔线及完整左右边框的紧凑固定宽度彩色启动横幅，并为更新状态提示统一使用 `[WRTPKILL]` 后台前缀。
@@ -151,13 +155,15 @@ WRTPKILL 建议用于 PVP 训练服务器、组织化练习网络和多竞技场
 3. 启动一次服务器生成配置。
 4. 重启服务器，并在游戏内使用 `/wrtp help`。
 
-两个安装包包含完全相同的完整代码、资源、配置注释和官方默认参数，唯一差异是默认 `language` 值。插件不会覆盖现有运行配置或语言文件。仓库只保存官方示例参数，服主的私人参数位于服务器运行目录，不会因源码同步而上传。
+两个安装包包含完全相同的完整代码、资源、配置注释和官方默认参数，唯一差异是默认 `language` 值。WRTPKILL 只在官方配置结构变化时安全重建 `config.yml`，合并新增项与注释，但不会替换现有参数、自定义节点或已记录的删除项。仓库只保存官方示例参数，服主的私人参数位于服务器运行目录，不会因源码同步而上传。
 
 完整配置、逻辑、限制和运维说明见 [WRTPKILL.md](WRTPKILL.md)。
 
 ### 自动更新
 
 插件会在启动时检查 GitHub 最新 Release。若发现更高语义版本且 `updater.auto-download` 已开启，会按当前配置语言选择 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`，并沿用正在运行的插件 JAR 文件名暂存到更新目录；重启服务器后应用。检查中、已是最新、发现新版、下载成功、手动下载和失败状态都会在后台使用不同颜色，必要时显示官方 Release 地址。
+
+重启后，配置升级器会使用 `plugins/WRTPKILL/.wrtpkill-default-config.yml` 作为官方默认值基线，并通过临时文件和原子替换写入配置。若 YAML 语法无效，插件会保留原文件并在后台报告错误，不会直接覆盖。
 
 ## License / 许可证
 

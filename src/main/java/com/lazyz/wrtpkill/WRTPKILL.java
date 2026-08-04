@@ -8,8 +8,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WRTPKILL extends JavaPlugin {
@@ -19,10 +19,15 @@ public class WRTPKILL extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        // Preserve server-specific values while adding newly introduced message defaults.
-        getConfig().options().copyDefaults(true);
-        migrateDefaultMessages();
-        saveConfig();
+        ConfigurationUpdater.Result configurationUpdate = null;
+        try {
+            configurationUpdate = ConfigurationUpdater.update(this);
+        } catch (IOException exception) {
+            logConsole("&cConfiguration update failed; the existing file was kept: &f"
+                    + exception.getMessage()
+                    + " &8/ &c配置更新失败，原文件已保留。");
+        }
+        reloadConfig();
         languageManager = new LanguageManager(this);
 
         AdminCommand adminCmd = new AdminCommand(this);
@@ -58,6 +63,10 @@ public class WRTPKILL extends JavaPlugin {
         syncDynamicCommands();
 
         printStartupBanner();
+        if (configurationUpdate != null && configurationUpdate.configRewritten()) {
+            logConsole("&aConfiguration updated; existing server values were preserved. "
+                    + "&8/ &a配置已自动更新，现有服务器参数已保留。");
+        }
         Bukkit.getAsyncScheduler().runNow(this, task -> new UpdateChecker(this).checkForUpdates());
     }
 
@@ -141,17 +150,4 @@ public class WRTPKILL extends JavaPlugin {
                 '&', "&8[&bWRTPKILL&8] &r" + message));
     }
 
-    private void migrateDefaultMessages() {
-        String path = "messages.death_respawned";
-        String oldDefault = "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n"
-                + "&c ☠ &c&l你已死亡并完成复活 &c☠\n"
-                + "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━";
-        String leftAlignedDefault = "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n"
-                + "&c☠ &c&l你已死亡并完成复活 &c☠\n"
-                + "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━";
-
-        if (oldDefault.equals(getConfig().getString(path))) {
-            getConfig().set(path, leftAlignedDefault);
-        }
-    }
 }

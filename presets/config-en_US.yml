@@ -1,6 +1,8 @@
 # WRTPKILL official English configuration preset
 # Compatibility target: Paper/Folia 1.21.11, Java 21
 # Place this file at plugins/WRTPKILL/config.yml before starting the server.
+# Future plugin updates merge new defaults while preserving values, custom worlds,
+# and removed entries. Never delete config.yml just to update WRTPKILL.
 
 language: "en_US"
 

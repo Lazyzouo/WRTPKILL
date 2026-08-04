@@ -7,7 +7,7 @@ def pluginName = "WRTPKILL"
 def pluginAuthor = "Lazyz"
 
 group = pluginGroup
-version = '1.2.6'
+version = '1.3.0'
 
 def releaseNotesVersion = providers.gradleProperty('releaseVersion').getOrElse(version.toString())
 def releaseNoticeFile = layout.projectDirectory.file('RELEASE_NOTICE.md')
@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+    testImplementation 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
     testImplementation 'org.yaml:snakeyaml:2.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
