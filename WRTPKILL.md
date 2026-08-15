@@ -1,6 +1,6 @@
 # WRTPKILL Administrator Guide / 管理员配置说明
 
-Version `1.3.0` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
+Version `1.4.0` | Paper/Folia `1.21.11` | Java 21 | Author: Lazyz
 
 ## English
 
@@ -20,7 +20,7 @@ The only official download page is `https://github.com/Lazyzouo/WRTPKILL/release
 
 The repository's `src/main/resources/config.yml` contains official example values only. At runtime, the user's settings live in `plugins/WRTPKILL/config.yml`. The two language packages contain the same complete schema and comments; only their default `language` value differs. Keep server-specific world names, coordinates, player names, and thresholds in the runtime copy, not in the source repository.
 
-Starting with `1.3.0`, WRTPKILL automatically merges configuration updates. It compares the new bundled defaults, the current user configuration, and `plugins/WRTPKILL/.wrtpkill-default-config.yml`, which stores only the previous official defaults. New official paths and comments are added, while every existing scalar, list, custom key, custom world, and deliberate deletion is preserved. A changed configuration is written through a temporary file and atomic replacement; no manual deletion of `config.yml` is required.
+Starting with `1.3.0`, WRTPKILL automatically merges configuration updates. In `1.4.0`, this follows Kitloader's schema-aware migration pattern: `config-version` identifies the official schema, the new bundled defaults are compared with the current user configuration and `plugins/WRTPKILL/.wrtpkill-default-config.yml`, and each rewrite first creates a timestamped copy under `plugins/WRTPKILL/config-backups/`. New official paths and comments are added, while every existing scalar, list, custom key, custom world, and deliberate deletion is preserved. A configuration newer than the installed plugin is never downgraded. Changed files are written through a temporary file and atomic replacement; no manual deletion of `config.yml` is required.
 
 When an existing `en_US.yml` still contains the exact official pre-1.2.1 offline/unlock divider-panel defaults, WRTPKILL substitutes the current left-aligned layouts in memory. It does not write the migration back to disk and never changes customized text.
 
@@ -54,10 +54,11 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 5. When offline cleanup triggers, inventory and Ender Chest are cleared, the player returns to spawn, and the teleport lock is removed.
 6. `/nopos` stores persistent privacy state. Administrators can still see hidden players and receive a hidden marker.
 7. The updater compares semantic versions from GitHub Releases. It selects `WRTPKILL-<version>-en.us.jar` or `WRTPKILL-<version>-zh.cn.jar` according to the active language, saves it under the running plugin JAR's filename in the update directory, and requires a restart to apply it.
-8. Startup, shutdown, and updater statuses share one colored `[WRTPKILL]` console prefix. The compact banner uses an inner width of 60 visible console columns, a centered bilingual control header, a dashed section divider, and complete cyan left/right borders; updater states use aqua, green, yellow, or red according to their result.
-9. Every in-game component is recursively forced bold after legacy colors are parsed, including help, dynamic help, TPA buttons and hover text, and position gradients.
-10. Every in-game message line passes through one final left-alignment stage. It removes visible leading whitespace from help, divider panels, `/pos`, ordinary feedback, and interactive TPA labels or hover text, including whitespace placed after formatting codes. The console startup banner uses a separate path and remains centered.
-11. At startup, the configuration upgrader performs a three-way merge against the saved official-default baseline. User values always win; only newly introduced official paths are inserted, and user deletions remain deleted after the baseline has been established. The dynamic `worlds` section is user-owned and is preserved exactly even during the first upgrade.
+8. After `/tpaccept`, the requesting player is placed at a safe point at least 32 blocks from the target player. Candidate chunks load asynchronously; solid, non-liquid ground and two passable blocks are required. If no candidate is safe, the request fails without leaving the one-use lock active.
+9. Startup, shutdown, and updater statuses share one colored `[WRTPKILL]` console prefix. The compact banner uses an inner width of 60 visible console columns, a centered bilingual control header, a dashed section divider, and complete cyan left/right borders; updater states use aqua, green, yellow, or red according to their result.
+10. Every in-game component is recursively forced bold after legacy colors are parsed, including help, dynamic help, TPA buttons and hover text, and position gradients.
+11. Every in-game message line passes through one final left-alignment stage. It removes visible leading whitespace from help, divider panels, `/pos`, ordinary feedback, and interactive TPA labels or hover text, including whitespace placed after formatting codes. The console startup banner uses a separate path and remains centered.
+12. At startup, the configuration upgrader performs a Kitloader-style schema-aware three-way merge against the saved official-default baseline. User values always win; only newly introduced official paths are inserted, user deletions remain deleted after the baseline has been established, and the previous file is backed up under `config-backups/`. A newer schema is never downgraded. The dynamic `worlds` section is user-owned and is preserved exactly even during the first upgrade.
 
 ### Permissions and trust boundaries
 
@@ -77,7 +78,7 @@ Use `/wrtp setspawn`, then `/wrtp setspawn confirm` within 10 seconds, instead o
 - For a consistent framed layout, custom divider-panel lines should remain within 39 visible characters. Split longer custom text with `\n` to avoid client-side wrapping.
 - The first `1.3.0` startup has no prior baseline, so missing official paths are treated as newly required paths once; existing values and custom nodes are still preserved. From that startup onward, deliberate deletions are remembered.
 - Invalid YAML cannot be merged. WRTPKILL leaves the original `config.yml` untouched and reports the error; the syntax must be corrected, but deleting the file is not required.
-- `.wrtpkill-default-config.yml` contains official defaults only and no server-specific values. Leave it in the plugin data directory so future updates can distinguish new settings from user deletions.
+- `.wrtpkill-default-config.yml` contains official defaults only and no server-specific values. Leave it in the plugin data directory so future updates can distinguish new settings from user deletions. Timestamped files under `config-backups/` are local recovery copies of the previous runtime configuration.
 - Paper/Folia `1.21.11` and Java 21 are the supported target. Older versions and unrelated server implementations are not guaranteed.
 
 ## 中文
@@ -98,7 +99,7 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 
 仓库内 `src/main/resources/config.yml` 只保存官方示例参数。服务端的用户参数位于 `plugins/WRTPKILL/config.yml`。两个语言包包含相同的完整结构与注释，只有默认 `language` 值不同。服务器专用世界名、坐标、玩家名和阈值应只写入运行目录，不应提交到源码仓库。
 
-从 `1.3.0` 起，WRTPKILL 会自动合并配置更新。插件比较新版内置默认配置、当前用户配置以及只保存上一版官方默认值的 `plugins/WRTPKILL/.wrtpkill-default-config.yml`。新版官方路径与注释会加入，所有现有标量、列表、自定义节点、自定义世界和主动删除项都会保留。配置变化时使用临时文件与原子替换写入，不再需要手动删除 `config.yml`。
+从 `1.3.0` 起，WRTPKILL 会自动合并配置更新。`1.4.0` 起采用 Kitloader 风格的 schema 升级：`config-version` 标识官方结构版本，插件比较新版内置默认配置、当前用户配置以及只保存上一版官方默认值的 `plugins/WRTPKILL/.wrtpkill-default-config.yml`，并在每次重写前将旧文件备份到 `plugins/WRTPKILL/config-backups/`。新版官方路径与注释会加入，所有现有标量、列表、自定义节点、自定义世界和主动删除项都会保留；高于当前插件的 schema 不会被强制降级。配置变化时使用临时文件与原子替换写入，不再需要手动删除 `config.yml`。
 
 当现有 `en_US.yml` 仍使用 1.2.1 之前完全一致的官方离线/解锁分割线面板默认值时，WRTPKILL 会仅在内存中替换为当前左对齐布局；不会写回磁盘，也不会修改任何自定义文本。
 
@@ -132,11 +133,12 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 5. 离线清理触发后会清空背包和末影箱、返回复活点并解除传送锁。
 6. `/nopos` 使用持久数据保存隐藏状态；管理员仍可看到隐藏玩家并收到隐藏标记。
 7. 更新器按语义版本比较 GitHub Release，根据当前语言选择 `WRTPKILL-<版本>-en.us.jar` 或 `WRTPKILL-<版本>-zh.cn.jar`，沿用正在运行的插件 JAR 文件名保存到更新目录，重启后应用。
-8. 启动、卸载和更新器状态统一使用彩色 `[WRTPKILL]` 后台前缀；紧凑横幅采用 60 个可见控制台列的内部宽度，并包含居中双语管理标题、虚线区段分隔和完整青色左右边框；更新状态按结果使用青、绿、黄或红色。
+8. `/tpaccept` 后，请求方会被放置在目标玩家至少 32 格外的安全位置。候选区块会异步加载，落点必须有坚实非液体地面和两个可通行方块；找不到安全点时请求失败且不会残留一次性传送锁。
+9. 启动、卸载和更新器状态统一使用彩色 `[WRTPKILL]` 后台前缀；紧凑横幅采用 60 个可见控制台列的内部宽度，并包含居中双语管理标题、虚线区段分隔和完整青色左右边框；更新状态按结果使用青、绿、黄或红色。
 
-9. 所有游戏内组件在解析颜色后都会递归强制加粗，包括帮助、动态帮助、TPA 按钮及悬停说明和坐标渐变。
-10. 所有游戏内消息都会经过统一的最终左对齐阶段，清除帮助菜单、分割线面板、`/pos`、普通反馈、TPA 按钮及悬停文本的可见行首空格，包括写在颜色代码之后的空格。服务器后台启动横幅走独立路径并继续居中。
-11. 插件启动时会基于已保存的官方默认值基线执行三方合并。用户现有参数始终优先，只加入新版新增的官方路径；基线建立后，用户主动删除的节点也会保持删除。动态 `worlds` 区段归用户所有，即使首次升级也会完全按现状保留。
+10. 所有游戏内组件在解析颜色后都会递归强制加粗，包括帮助、动态帮助、TPA 按钮及悬停说明和坐标渐变。
+11. 所有游戏内消息都会经过统一的最终左对齐阶段，清除帮助菜单、分割线面板、`/pos`、普通反馈、TPA 按钮及悬停文本的可见行首空格，包括写在颜色代码之后的空格。服务器后台启动横幅走独立路径并继续居中。
+12. 插件启动时会基于 `config-version`、已保存的官方默认值基线执行 Kitloader 风格的 schema 三方合并。用户现有参数始终优先，只加入新版新增的官方路径；每次重写前都会在 `config-backups/` 创建时间戳备份；高于当前插件的 schema 不会被强制降级。基线建立后，用户主动删除的节点也会保持删除。动态 `worlds` 区段归用户所有，即使首次升级也会完全按现状保留。
 
 ### 权限边界
 
@@ -150,11 +152,12 @@ WRTPKILL 官方构建不包含隐藏后门或遥测。配置、玩家状态、�
 - RTP 每次执行只尝试一个随机 X/Z；若不安全，玩家需要重新执行指令。
 - 从配置移除动态 RTP 后功能立即失效，但指令标签可能保留在服务端命令表中直至重启。
 - TPA 请求超时固定为 30 秒。
+- `/tpaccept` 的安全外围距离固定至少为 32 格；目标世界边界、区块加载失败或外围没有合适地面时，传送会失败并释放锁定。
 - 白名单绕过锁定检查；成功传送后仍可能写入锁标记，但玩家留在白名单期间会继续绕过。
 - 自动更新需要访问 `api.github.com` 和 GitHub Release 资源；每个 Release 只手动上传 `WRTPKILL-<版本>-en.us.jar` 与 `WRTPKILL-<版本>-zh.cn.jar`，GitHub 仍会显示无法关闭的自动源码压缩包。Release JAR 必须直接上传 Gradle 原产物，禁止改名。活动中的 JAR 必须等服务端重启才能替换。
 - 离线清理会永久清空背包与末影箱，生产服启用前必须确认阈值并做好备份。
 - 为保持分割线框架整齐，自定义面板每行应保持在 39 个可见字符以内；更长文本应使用 `\n` 拆行，避免客户端自动换行。
-- 首次运行 `1.3.0` 时还没有旧基线，因此缺失的官方路径会被视为需补充的新路径一次；现有参数和自定义节点仍会保留。此后用户主动删除的节点会被持续记住。
+- 首次运行 `1.3.0` 时还没有旧基线，因此缺失的官方路径会被视为需补充的新路径一次；现有参数和自定义节点仍会保留。此后用户主动删除的节点会被持续记住。`1.4.0` 起额外写入 `config-version` 并在每次重写前保留 `config-backups/` 备份。
 - 无效 YAML 无法合并。WRTPKILL 会保持原 `config.yml` 不动并在后台报告错误；只需修正语法，不需要删除配置文件。
 - `.wrtpkill-default-config.yml` 只包含官方默认值，不含服务器专用参数。应保留该文件，以便后续更新区分新版参数和用户删除项。
 - 官方目标是 Paper/Folia `1.21.11` 与 Java 21，不保证兼容旧版或其他服务端实现。

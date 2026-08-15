@@ -1,7 +1,12 @@
 package com.lazyz.wrtpkill;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,13 +17,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class TPAExecutor implements CommandExecutor, TabCompleter {
+
+    static final double MIN_TPA_DISTANCE = 32.0;
+    private static final int[][] SAFE_OFFSETS = {
+            {32, 0}, {-32, 0}, {0, 32}, {0, -32},
+            {32, 16}, {32, -16}, {-32, 16}, {-32, -16},
+            {16, 32}, {-16, 32}, {16, -32}, {-16, -32},
+            {40, 0}, {-40, 0}, {0, 40}, {0, -40}
+    };
 
     private final WRTPKILL plugin;
     private final NamespacedKey lockKey;
@@ -124,18 +139,31 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
             senderPlayer.getPersistentDataContainer().set(lockKey, PersistentDataType.BYTE, (byte) 1);
             senderPlayer.getPersistentDataContainer().set(teleportPendingKey, PersistentDataType.LONG, attemptId);
 
-            senderPlayer.teleportAsync(player.getLocation()).whenComplete((success, error) -> {
+            findSafeLocation(player.getLocation()).whenComplete((destination, searchError) -> {
                 Long currentAttempt = senderPlayer.getPersistentDataContainer()
                         .get(teleportPendingKey, PersistentDataType.LONG);
                 if (currentAttempt == null || currentAttempt != attemptId) return;
 
-                senderPlayer.getPersistentDataContainer().remove(teleportPendingKey);
-                if (error == null && Boolean.TRUE.equals(success)) {
-                    MessageUtils.send(senderPlayer, plugin, "tpa_success", "target", player.getName());
-                } else {
+                if (searchError != null || destination == null) {
+                    senderPlayer.getPersistentDataContainer().remove(teleportPendingKey);
                     senderPlayer.getPersistentDataContainer().remove(lockKey);
                     MessageUtils.send(senderPlayer, plugin, "tpa_fail");
+                    return;
                 }
+
+                senderPlayer.teleportAsync(destination).whenComplete((success, error) -> {
+                    Long completedAttempt = senderPlayer.getPersistentDataContainer()
+                            .get(teleportPendingKey, PersistentDataType.LONG);
+                    if (completedAttempt == null || completedAttempt != attemptId) return;
+
+                    senderPlayer.getPersistentDataContainer().remove(teleportPendingKey);
+                    if (error == null && Boolean.TRUE.equals(success)) {
+                        MessageUtils.send(senderPlayer, plugin, "tpa_success", "target", player.getName());
+                    } else {
+                        senderPlayer.getPersistentDataContainer().remove(lockKey);
+                        MessageUtils.send(senderPlayer, plugin, "tpa_fail");
+                    }
+                });
             });
             return true;
         }
@@ -185,6 +213,87 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
             if (name.equalsIgnoreCase(player.getName())) return false;
         }
         return true;
+    }
+
+    private CompletableFuture<Location> findSafeLocation(Location targetLocation) {
+        if (targetLocation == null || targetLocation.getWorld() == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        List<Location> candidates = candidateLocations(targetLocation);
+        return findSafeCandidate(targetLocation.getWorld(), targetLocation, candidates, 0);
+    }
+
+    private CompletableFuture<Location> findSafeCandidate(
+            World world, Location targetLocation, List<Location> candidates, int index) {
+        if (index >= candidates.size()) return CompletableFuture.completedFuture(null);
+
+        Location candidate = candidates.get(index);
+        if (!world.getWorldBorder().isInside(candidate)) {
+            return findSafeCandidate(world, targetLocation, candidates, index + 1);
+        }
+
+        int chunkX = candidate.getBlockX() >> 4;
+        int chunkZ = candidate.getBlockZ() >> 4;
+        return world.getChunkAtAsync(chunkX, chunkZ)
+                .handle((chunk, error) -> error == null ? chunk : null)
+                .thenCompose(chunk -> {
+                    if (chunk != null) {
+                        Location safe = findSafeStandingLocation(world, targetLocation, chunk, candidate);
+                        if (safe != null) return CompletableFuture.completedFuture(safe);
+                    }
+                    return findSafeCandidate(world, targetLocation, candidates, index + 1);
+                });
+    }
+
+    private Location findSafeStandingLocation(
+            World world, Location targetLocation, Chunk chunk, Location candidate) {
+        int localX = Math.floorMod(candidate.getBlockX(), 16);
+        int localZ = Math.floorMod(candidate.getBlockZ(), 16);
+        int highestY = world.getMaxHeight() - 2;
+        int lowestY = world.getMinHeight() + 1;
+
+        for (int y = highestY; y >= lowestY; y--) {
+            Block floor = chunk.getBlock(localX, y - 1, localZ);
+            Block feet = chunk.getBlock(localX, y, localZ);
+            Block head = chunk.getBlock(localX, y + 1, localZ);
+            if (!floor.getType().isSolid() || floor.isLiquid()
+                    || !isSafeStandingBlock(floor.getType())
+                    || !feet.isPassable() || feet.isLiquid()
+                    || !head.isPassable() || head.isLiquid()) {
+                continue;
+            }
+            Location safe = new Location(world, candidate.getBlockX() + 0.5, y,
+                    candidate.getBlockZ() + 0.5, candidate.getYaw(), candidate.getPitch());
+            double deltaX = safe.getX() - targetLocation.getX();
+            double deltaZ = safe.getZ() - targetLocation.getZ();
+            if (deltaX * deltaX + deltaZ * deltaZ < MIN_TPA_DISTANCE * MIN_TPA_DISTANCE) continue;
+            return safe;
+        }
+        return null;
+    }
+
+    private boolean isSafeStandingBlock(Material material) {
+        return switch (material) {
+            case CACTUS, CACTUS_FLOWER, CAMPFIRE, FIRE, LAVA, MAGMA_BLOCK,
+                    NETHER_PORTAL, POWDER_SNOW, POWDER_SNOW_CAULDRON,
+                    SOUL_CAMPFIRE, SOUL_FIRE, SWEET_BERRY_BUSH, WATER,
+                    WATER_CAULDRON, LAVA_CAULDRON, END_PORTAL, END_PORTAL_FRAME -> false;
+            default -> true;
+        };
+    }
+
+    static List<Location> candidateLocations(Location targetLocation) {
+        if (targetLocation == null || targetLocation.getWorld() == null) return List.of();
+        return Arrays.stream(SAFE_OFFSETS)
+                .map(offset -> new Location(
+                        targetLocation.getWorld(),
+                        targetLocation.getX() + offset[0],
+                        targetLocation.getY(),
+                        targetLocation.getZ() + offset[1],
+                        targetLocation.getYaw(),
+                        targetLocation.getPitch()))
+                .toList();
     }
 
     @Nullable

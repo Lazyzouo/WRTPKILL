@@ -5,13 +5,13 @@
 >
 > The update checker only sends HTTPS requests to the public GitHub Releases API to read version metadata and, when automatic download is enabled, download the selected official JAR. It does not send plugin-managed or Minecraft server data. As with any HTTPS request, GitHub receives ordinary connection metadata such as the source IP address and WRTPKILL version in the User-Agent header.
 >
-> The automatic configuration upgrader reads and writes only `config.yml` and a local official-default baseline inside the WRTPKILL plugin directory. The baseline contains no server-specific values, and neither file is uploaded.
+> The automatic configuration upgrader reads and writes only `config.yml`, a local official-default baseline, and timestamped local backups inside the WRTPKILL plugin directory. The baseline contains no server-specific values, backups remain on the server, and none of these files are uploaded.
 >
 > **WRTPKILL 是完全开源项目。** 源代码与官方构建流程均公开可审计。官方构建不包含隐藏后门或遥测，不会上传服务器配置、玩家数据、坐标、世界、日志或运行记录。WRTPKILL 创建和维护的数据只保存在运行本插件的服务器上。
 >
 > 更新检查仅通过 HTTPS 访问公开的 GitHub Releases API，以读取版本信息，并在启用自动下载时下载所选官方 JAR；不会发送插件管理的数据或 Minecraft 服务器资料。与任何 HTTPS 请求相同，GitHub 会收到来源 IP 地址及 User-Agent 中的 WRTPKILL 版本等普通连接元数据。
 >
-> 自动配置升级器只会读写 WRTPKILL 插件目录内的 `config.yml` 与本地官方默认值基线。基线不包含服务器专用参数，两个文件都不会被上传。
+> 自动配置升级器只会读写 WRTPKILL 插件目录内的 `config.yml`、本地官方默认值基线和带时间戳的本地备份。基线不包含服务器专用参数，备份只保存在服务器上，这些文件都不会被上传。
 
 ## Official Release
 

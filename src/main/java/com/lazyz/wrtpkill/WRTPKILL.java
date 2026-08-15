@@ -67,6 +67,11 @@ public class WRTPKILL extends JavaPlugin {
             logConsole("&aConfiguration updated; existing server values were preserved. "
                     + "&8/ &a配置已自动更新，现有服务器参数已保留。");
         }
+        if (configurationUpdate != null && configurationUpdate.configRewritten()
+                && configurationUpdate.backupPath() != null) {
+            logConsole("&7Configuration backup: &f"
+                    + configurationUpdate.backupPath().getFileName());
+        }
         Bukkit.getAsyncScheduler().runNow(this, task -> new UpdateChecker(this).checkForUpdates());
     }
 

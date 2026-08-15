@@ -13,14 +13,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 final class ConfigurationUpdater {
     static final String BASELINE_FILE_NAME = ".wrtpkill-default-config.yml";
+    static final String CONFIG_VERSION_PATH = "config-version";
+    static final int CURRENT_CONFIG_VERSION = 1;
     private static final String CONFIG_RESOURCE = "config.yml";
+    private static final DateTimeFormatter BACKUP_TIMESTAMP =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss-SSS", Locale.ROOT);
 
     private ConfigurationUpdater() {
     }
@@ -39,6 +46,17 @@ final class ConfigurationUpdater {
 
         YamlConfiguration officialConfig = loadYaml(officialText, "bundled config.yml");
         YamlConfiguration userConfig = loadYaml(userText, configFile.toString());
+        int bundledConfigVersion = readConfigVersion(officialConfig, "bundled config.yml");
+        if (bundledConfigVersion > 0 && bundledConfigVersion != CURRENT_CONFIG_VERSION) {
+            throw new IOException("Bundled config.yml declares schema v" + bundledConfigVersion
+                    + " but this plugin requires v" + CURRENT_CONFIG_VERSION + ".");
+        }
+        int userConfigVersion = readConfigVersion(userConfig, configFile.toString());
+        if (bundledConfigVersion > 0 && userConfigVersion > bundledConfigVersion) {
+            throw new IOException("Server config.yml uses newer schema v" + userConfigVersion
+                    + "; this plugin supports up to v" + bundledConfigVersion
+                    + ". Refusing to downgrade it.");
+        }
         Map<String, Object> previousDefaults = null;
         String baselineText = null;
         if (Files.isRegularFile(baselineFile)) {
@@ -55,19 +73,25 @@ final class ConfigurationUpdater {
         Map<String, Object> officialValues = toMap(officialConfig);
         Map<String, Object> mergedValues = ConfigTreeMerger.merge(
                 officialValues, userValues, previousDefaults);
+        if (bundledConfigVersion > 0) {
+            // Schema metadata is owned by the plugin, while all functional values remain user-owned.
+            mergedValues.put(CONFIG_VERSION_PATH, bundledConfigVersion);
+        }
         boolean defaultsChanged = baselineText == null || !officialText.equals(baselineText);
         boolean valuesChanged = !mergedValues.equals(userValues);
         boolean exactFreshConfig = baselineText == null && officialText.equals(userText);
         boolean rewriteConfig = valuesChanged || (defaultsChanged && !exactFreshConfig);
+        Path backupPath = null;
 
         if (rewriteConfig) {
+            backupPath = createBackup(configFile, userConfigVersion, bundledConfigVersion);
             synchronizeSection(officialConfig, mergedValues);
             copyUserComments(userConfig, officialConfig);
             writeAtomically(configFile, officialConfig.saveToString());
         }
         if (defaultsChanged) writeAtomically(baselineFile, officialText);
 
-        return new Result(rewriteConfig, defaultsChanged);
+        return new Result(rewriteConfig, defaultsChanged, backupPath);
     }
 
     private static String readOfficialConfig(JavaPlugin plugin) throws IOException {
@@ -115,6 +139,52 @@ final class ConfigurationUpdater {
             return result;
         }
         return value;
+    }
+
+    private static int readConfigVersion(ConfigurationSection config, String source) throws IOException {
+        Object value = config.get(CONFIG_VERSION_PATH);
+        if (value == null) return 0;
+
+        int parsed;
+        if (value instanceof Number number) {
+            double numericValue = number.doubleValue();
+            parsed = number.intValue();
+            if (numericValue != parsed) {
+                throw new IOException(source + " has a non-integer '" + CONFIG_VERSION_PATH + "' value.");
+            }
+        } else if (value instanceof String text) {
+            try {
+                parsed = Integer.parseInt(text.trim());
+            } catch (NumberFormatException exception) {
+                throw new IOException(source + " has an invalid '" + CONFIG_VERSION_PATH + "' value.", exception);
+            }
+        } else {
+            throw new IOException(source + " has an invalid '" + CONFIG_VERSION_PATH + "' value type.");
+        }
+
+        if (parsed < 0) {
+            throw new IOException(source + " has a negative '" + CONFIG_VERSION_PATH + "' value.");
+        }
+        return parsed;
+    }
+
+    private static Path createBackup(Path configFile, int previousVersion, int currentVersion)
+            throws IOException {
+        if (!Files.isRegularFile(configFile)) return null;
+
+        Path backupDirectory = configFile.getParent().resolve("config-backups");
+        Files.createDirectories(backupDirectory);
+        String timestamp = BACKUP_TIMESTAMP.format(LocalDateTime.now());
+        String prefix = "config-v" + previousVersion + "-to-v" + currentVersion + "-" + timestamp;
+        for (int attempt = 0; ; attempt++) {
+            String suffix = attempt == 0 ? "" : "-" + attempt;
+            Path candidate = backupDirectory.resolve(prefix + suffix + ".yml");
+            try {
+                return Files.copy(configFile, candidate, StandardCopyOption.COPY_ATTRIBUTES);
+            } catch (java.nio.file.FileAlreadyExistsException ignored) {
+                // Two restarts can occur in the same millisecond; keep both backups.
+            }
+        }
     }
 
     private static void synchronizeSection(
@@ -176,6 +246,6 @@ final class ConfigurationUpdater {
         }
     }
 
-    record Result(boolean configRewritten, boolean baselineUpdated) {
+    record Result(boolean configRewritten, boolean baselineUpdated, Path backupPath) {
     }
 }

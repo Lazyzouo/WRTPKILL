@@ -4,6 +4,34 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.4.0] - 2026-08-15
+
+### English
+
+#### Added
+
+- Applied the Kitloader-style schema-aware configuration migration flow to WRTPKILL.
+- Added `config-version` metadata, timestamped `config-backups/` recovery copies, and a refusal to downgrade a configuration newer than the installed plugin.
+- Preserved existing user values, custom worlds, custom keys, deliberate deletions, comments, and atomic-write protection during configuration upgrades.
+- Added safe `/tpaccept` placement: the requesting player is teleported to a loaded, non-liquid standing position at least 32 blocks from the target player.
+
+#### Documentation
+
+- Updated the administrator guide, README, release notice, and compatibility labels for `1.4.0`.
+
+### 中文
+
+#### 新增
+
+- 将 Kitloader 风格的 schema 配置自动迁移流程应用到 WRTPKILL。
+- 新增 `config-version` 元数据、带时间戳的 `config-backups/` 恢复备份，并拒绝将高于当前插件版本的配置强制降级。
+- 配置升级继续保留现有用户参数、自定义世界、自定义节点、主动删除项、注释和原子写入保护。
+- 新增安全 `/tpaccept` 传送：请求方会被传送到已加载、非液体且至少距离目标玩家 32 格的站立位置。
+
+#### 文档
+
+- 更新管理员说明、README、发布声明及 `1.4.0` 兼容性标识。
+
 ## [1.3.0] - 2026-08-04
 
 ### English

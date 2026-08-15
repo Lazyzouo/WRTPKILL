@@ -82,6 +82,42 @@ class ConfigurationUpdaterTest {
     }
 
     @Test
+    void createsKitloaderStyleBackupAndAdvancesSchemaMetadata() throws IOException {
+        Path config = temporaryDirectory.resolve("config.yml");
+        Path baseline = temporaryDirectory.resolve(ConfigurationUpdater.BASELINE_FILE_NAME);
+        Files.writeString(config, "config-version: 0\nfeature:\n  enabled: false\n",
+                StandardCharsets.UTF_8);
+
+        ConfigurationUpdater.Result result = ConfigurationUpdater.update(
+                config, baseline, "# Official\nconfig-version: 1\nfeature:\n  enabled: true\n");
+
+        assertTrue(result.configRewritten());
+        assertTrue(result.backupPath() != null);
+        assertTrue(Files.isRegularFile(result.backupPath()));
+        assertTrue(result.backupPath().getFileName().toString().startsWith("config-v0-to-v1-"));
+        YamlConfiguration updated = YamlConfiguration.loadConfiguration(config.toFile());
+        assertEquals(1, updated.getInt("config-version"));
+        assertFalse(updated.getBoolean("feature.enabled"));
+        assertEquals("config-version: 0\nfeature:\n  enabled: false\n",
+                Files.readString(result.backupPath(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void refusesToDowngradeAConfigurationWithANewerSchema() throws IOException {
+        Path config = temporaryDirectory.resolve("config.yml");
+        Path baseline = temporaryDirectory.resolve(ConfigurationUpdater.BASELINE_FILE_NAME);
+        String newer = "config-version: 2\nfeature: true\n";
+        Files.writeString(config, newer, StandardCharsets.UTF_8);
+
+        IOException exception = assertThrows(IOException.class, () -> ConfigurationUpdater.update(
+                config, baseline, "config-version: 1\nfeature: false\n"));
+
+        assertTrue(exception.getMessage().contains("Refusing to downgrade"));
+        assertEquals(newer, Files.readString(config, StandardCharsets.UTF_8));
+        assertFalse(Files.exists(temporaryDirectory.resolve("config-backups")));
+    }
+
+    @Test
     void invalidYamlIsNeverOverwritten() throws IOException {
         Path config = temporaryDirectory.resolve("config.yml");
         Path baseline = temporaryDirectory.resolve(ConfigurationUpdater.BASELINE_FILE_NAME);

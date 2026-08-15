@@ -7,6 +7,11 @@
 #                                                                #
 # ============================================================== #
 
+# Kitloader-style schema marker. It is advanced automatically during updates;
+# functional settings below remain owned by the server administrator.
+# A changed config.yml is backed up under config-backups/ before replacement.
+config-version: 1
+
 # ========================================== #
 #               全 局 设 置              #
 # ========================================== #
@@ -160,7 +165,7 @@ messages:
   tpa_usage: "&8[&e⚠&8] &e&l参数错误 &8► &7用法: &6/tpa <玩家名称>"
   tpa_sent: "&8[&a✔&8] &a已向 &e{target} &a发送请求，30秒内有效。"
   tpa_received: "&e收到来自 &a{player} &e的传送请求。 {buttons}"
-  tpa_success: "&8[&a✔&8] &a成功传送到 &e{target} &a身边！"
+  tpa_success: "&8[&a✔&8] &a已传送至距离 &e{target} &a至少 32 格的安全位置！"
   tpa_accepted_receiver: "&8[&a✔&8] &a已接受传送请求。"
   tpa_accepted_sender: "&8[&a✔&8] &e{target} &a已接受请求，正在为你传送..."
   tpa_player_offline: "&8[&c✖&8] &c&l请求失败 &8► &7该玩家不在线或不存在。"

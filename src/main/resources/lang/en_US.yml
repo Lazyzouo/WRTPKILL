@@ -38,7 +38,7 @@ messages:
   tpa_usage: "&8[&e!&8] &e&lInvalid arguments &8> &7Usage: &6/tpa <player>"
   tpa_sent: "&8[&aOK&8] &aRequest sent to &e{target}&a. It expires in 30 seconds."
   tpa_received: "&eTeleport request from &a{player}&e. {buttons}"
-  tpa_success: "&8[&aOK&8] &aTeleported to &e{target}&a."
+  tpa_success: "&8[&aOK&8] &aTeleported to a safe point at least 32 blocks from &e{target}&a."
   tpa_accepted_receiver: "&8[&aOK&8] &aTeleport request accepted."
   tpa_accepted_sender: "&8[&aOK&8] &e{target} &aaccepted your request. Teleporting..."
   tpa_player_offline: "&8[&cX&8] &c&lRequest failed &8> &7That player is offline or does not exist."
