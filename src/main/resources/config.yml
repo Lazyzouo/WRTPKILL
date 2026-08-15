@@ -10,13 +10,13 @@
 # Kitloader-style schema marker. It is advanced automatically during updates;
 # functional settings below remain owned by the server administrator.
 # A changed config.yml is backed up under config-backups/ before replacement.
-config-version: 1
+config-version: 2
 
 # ========================================== #
 #               全 局 设 置              #
 # ========================================== #
-# 插件更新后无需删除本文件。新版配置项与注释会自动合并，现有参数、自定义世界和主动删除项会保留。
-# .wrtpkill-default-config.yml 是自动维护的官方默认值基线，不包含任何服务器私人参数。
+# 插件更新后无需删除本文件。新版缺失配置项与注释会自动补充，现有参数和自定义世界会保留。
+# 插件只使用 config.yml；旧版遗留的 .wrtpkill-default-config.yml 会在升级成功后自动删除。
 
 # 界面语言。可选值: zh_CN / en_US
 # 修改后使用 /wrtp reload，或重启服务器使其生效。
@@ -36,6 +36,10 @@ whitelist: []
 # 玩家互传系统全局开关
 # 若设为 false，所有玩家将无法使用 /tpa 相关指令。
 tpa-enabled: true
+
+# /tpaccept 成功后，请求方与目标玩家之间的最小水平距离（方块）。
+# 可设置 1~1024，超出范围会自动限制；修改后使用 /wrtp reload 生效。
+tpa-safe-radius: 32
 
 
 # ========================================== #
@@ -165,9 +169,9 @@ messages:
   tpa_usage: "&8[&e⚠&8] &e&l参数错误 &8► &7用法: &6/tpa <玩家名称>"
   tpa_sent: "&8[&a✔&8] &a已向 &e{target} &a发送请求，30秒内有效。"
   tpa_received: "&e收到来自 &a{player} &e的传送请求。 {buttons}"
-  tpa_success: "&8[&a✔&8] &a已传送至距离 &e{target} &a至少 32 格的安全位置！"
+  tpa_success: "&8[&a✔&8] &a已传送至距离 &e{target} &a至少 {radius} 格的安全位置！"
   tpa_accepted_receiver: "&8[&a✔&8] &a已接受传送请求。"
-  tpa_accepted_sender: "&8[&a✔&8] &e{target} &a已接受请求，正在为你传送..."
+  tpa_accepted_sender: "&8[&a✔&8] &e{target} &a已接受请求，正在寻找至少 {radius} 格外的安全位置..."
   tpa_player_offline: "&8[&c✖&8] &c&l请求失败 &8► &7该玩家不在线或不存在。"
   tpa_self: "&8[&e⚠&8] &e&l请求无效 &8► &7你不能向自己发送传送请求。"
   tpa_timeout_receiver: "&8[&e⚠&8] &e&l请求超时 &8► &7来自 &f{sender} &7的传送请求已失效。"

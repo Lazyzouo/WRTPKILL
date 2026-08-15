@@ -1,8 +1,10 @@
 # WRTPKILL official English configuration preset
 # Compatibility target: Paper/Folia 1.21.11, Java 21
 # Place this file at plugins/WRTPKILL/config.yml before starting the server.
-# Future plugin updates merge new defaults while preserving values, custom worlds,
-# and removed entries. Never delete config.yml just to update WRTPKILL.
+# Future plugin updates add missing defaults while preserving values and custom
+# worlds. Never delete config.yml just to update WRTPKILL.
+
+config-version: 2
 
 language: "en_US"
 
@@ -18,6 +20,9 @@ whitelist: []
 
 # Global switch for /tpa, /tpaccept, /tpdeny and /tpcancel.
 tpa-enabled: true
+
+# Minimum horizontal distance after /tpaccept. Values are clamped to 1-1024.
+tpa-safe-radius: 32
 
 suicide-settings:
   # Skip the vanilla death screen and return players to the configured spawn.

@@ -21,7 +21,6 @@ class ConfigurationUpdaterTest {
     @Test
     void updatesSchemaAndCommentsWithoutReplacingUserSettings() throws IOException {
         Path config = temporaryDirectory.resolve("config.yml");
-        Path baseline = temporaryDirectory.resolve(ConfigurationUpdater.BASELINE_FILE_NAME);
         String firstDefaults = """
                 # Official header
                 language: "zh_CN"
@@ -41,18 +40,16 @@ class ConfigurationUpdaterTest {
                 custom-value: 27
                 """, StandardCharsets.UTF_8);
 
-        ConfigurationUpdater.Result first = ConfigurationUpdater.update(
-                config, baseline, firstDefaults);
+        ConfigurationUpdater.Result first = ConfigurationUpdater.update(config, firstDefaults);
 
-        assertTrue(first.configRewritten());
-        assertEquals(firstDefaults, Files.readString(baseline, StandardCharsets.UTF_8));
+        assertFalse(first.configRewritten());
         YamlConfiguration firstResult = YamlConfiguration.loadConfiguration(config.toFile());
         assertEquals("en_US", firstResult.getString("language"));
         assertFalse(firstResult.getBoolean("updater.enabled"));
         assertEquals("practice", firstResult.getString("worlds.arena.world-name"));
         assertFalse(firstResult.contains("worlds.nether"));
         assertEquals(27, firstResult.getInt("custom-value"));
-        assertTrue(Files.readString(config, StandardCharsets.UTF_8).contains("# Official header"));
+        assertFalse(Files.readString(config, StandardCharsets.UTF_8).contains("# Official header"));
 
         firstResult.set("updater", null);
         firstResult.save(config.toFile());
@@ -69,11 +66,12 @@ class ConfigurationUpdaterTest {
                     world-name: "world_nether"
                 """;
 
-        ConfigurationUpdater.update(config, baseline, secondDefaults);
+        ConfigurationUpdater.update(config, secondDefaults);
 
         YamlConfiguration secondResult = YamlConfiguration.loadConfiguration(config.toFile());
         assertEquals("en_US", secondResult.getString("language"));
-        assertFalse(secondResult.contains("updater"));
+        assertTrue(secondResult.getBoolean("updater.enabled"));
+        assertTrue(secondResult.getBoolean("updater.auto-download"));
         assertTrue(secondResult.getBoolean("new-feature.enabled"));
         assertEquals("practice", secondResult.getString("worlds.arena.world-name"));
         assertEquals(27, secondResult.getInt("custom-value"));
@@ -84,33 +82,53 @@ class ConfigurationUpdaterTest {
     @Test
     void createsKitloaderStyleBackupAndAdvancesSchemaMetadata() throws IOException {
         Path config = temporaryDirectory.resolve("config.yml");
-        Path baseline = temporaryDirectory.resolve(ConfigurationUpdater.BASELINE_FILE_NAME);
-        Files.writeString(config, "config-version: 0\nfeature:\n  enabled: false\n",
+        Files.writeString(config, "config-version: 1\nfeature:\n  enabled: false\n",
                 StandardCharsets.UTF_8);
 
         ConfigurationUpdater.Result result = ConfigurationUpdater.update(
-                config, baseline, "# Official\nconfig-version: 1\nfeature:\n  enabled: true\n");
+                config, "# Official\nconfig-version: 2\nfeature:\n  enabled: true\n");
 
         assertTrue(result.configRewritten());
         assertTrue(result.backupPath() != null);
         assertTrue(Files.isRegularFile(result.backupPath()));
-        assertTrue(result.backupPath().getFileName().toString().startsWith("config-v0-to-v1-"));
+        assertTrue(result.backupPath().getFileName().toString().startsWith("config-v1-to-v2-"));
         YamlConfiguration updated = YamlConfiguration.loadConfiguration(config.toFile());
-        assertEquals(1, updated.getInt("config-version"));
+        assertEquals(2, updated.getInt("config-version"));
         assertFalse(updated.getBoolean("feature.enabled"));
-        assertEquals("config-version: 0\nfeature:\n  enabled: false\n",
+        assertEquals("config-version: 1\nfeature:\n  enabled: false\n",
                 Files.readString(result.backupPath(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void migratesTheOldOfficialTpaRadiusMessageToTheDynamicPlaceholder() throws IOException {
+        Path config = temporaryDirectory.resolve("config.yml");
+        Files.writeString(config, """
+                config-version: 1
+                messages:
+                  tpa_success: "&8[&a✔&8] &a已传送至距离 &e{target} &a至少 32 格的安全位置！"
+                """, StandardCharsets.UTF_8);
+
+        ConfigurationUpdater.update(config, """
+                config-version: 2
+                tpa-safe-radius: 32
+                messages:
+                  tpa_success: "&8[&a✔&8] &a已传送至距离 &e{target} &a至少 {radius} 格的安全位置！"
+                """);
+
+        YamlConfiguration updated = YamlConfiguration.loadConfiguration(config.toFile());
+        assertEquals(2, updated.getInt("config-version"));
+        assertEquals(32, updated.getInt("tpa-safe-radius"));
+        assertTrue(updated.getString("messages.tpa_success", "").contains("{radius}"));
     }
 
     @Test
     void refusesToDowngradeAConfigurationWithANewerSchema() throws IOException {
         Path config = temporaryDirectory.resolve("config.yml");
-        Path baseline = temporaryDirectory.resolve(ConfigurationUpdater.BASELINE_FILE_NAME);
-        String newer = "config-version: 2\nfeature: true\n";
+        String newer = "config-version: 3\nfeature: true\n";
         Files.writeString(config, newer, StandardCharsets.UTF_8);
 
         IOException exception = assertThrows(IOException.class, () -> ConfigurationUpdater.update(
-                config, baseline, "config-version: 1\nfeature: false\n"));
+                config, "config-version: 2\nfeature: false\n"));
 
         assertTrue(exception.getMessage().contains("Refusing to downgrade"));
         assertEquals(newer, Files.readString(config, StandardCharsets.UTF_8));
@@ -120,14 +138,23 @@ class ConfigurationUpdaterTest {
     @Test
     void invalidYamlIsNeverOverwritten() throws IOException {
         Path config = temporaryDirectory.resolve("config.yml");
-        Path baseline = temporaryDirectory.resolve(ConfigurationUpdater.BASELINE_FILE_NAME);
         String invalid = "language: [";
         Files.writeString(config, invalid, StandardCharsets.UTF_8);
 
         assertThrows(IOException.class, () -> ConfigurationUpdater.update(
-                config, baseline, "language: \"zh_CN\"\n"));
+                config, "language: \"zh_CN\"\n"));
 
         assertEquals(invalid, Files.readString(config, StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void removesTheLegacyDefaultBaselineFile() throws IOException {
+        Path baseline = temporaryDirectory.resolve(
+                ConfigurationUpdater.LEGACY_BASELINE_FILE_NAME);
+        Files.writeString(baseline, "official: defaults\n", StandardCharsets.UTF_8);
+
+        assertTrue(ConfigurationUpdater.removeLegacyBaseline(temporaryDirectory));
         assertFalse(Files.exists(baseline));
+        assertFalse(ConfigurationUpdater.removeLegacyBaseline(temporaryDirectory));
     }
 }

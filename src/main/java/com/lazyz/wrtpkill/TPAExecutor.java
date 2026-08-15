@@ -16,8 +16,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,13 +27,11 @@ import java.util.concurrent.TimeUnit;
 
 public class TPAExecutor implements CommandExecutor, TabCompleter {
 
-    static final double MIN_TPA_DISTANCE = 32.0;
-    private static final int[][] SAFE_OFFSETS = {
-            {32, 0}, {-32, 0}, {0, 32}, {0, -32},
-            {32, 16}, {32, -16}, {-32, 16}, {-32, -16},
-            {16, 32}, {-16, 32}, {16, -32}, {-16, -32},
-            {40, 0}, {-40, 0}, {0, 40}, {0, -40}
-    };
+    static final double DEFAULT_TPA_RADIUS = 32.0;
+    static final double MIN_TPA_RADIUS = 1.0;
+    static final double MAX_TPA_RADIUS = 1024.0;
+    private static final int CANDIDATES_PER_RING = 16;
+    private static final double[] CANDIDATE_RING_MARGINS = {1.0, 8.0};
 
     private final WRTPKILL plugin;
     private final NamespacedKey lockKey;
@@ -132,14 +130,17 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+            double safeRadius = configuredSafeRadius();
+            String radiusText = formatRadius(safeRadius);
             MessageUtils.send(player, plugin, "tpa_accepted_receiver");
-            MessageUtils.send(senderPlayer, plugin, "tpa_accepted_sender", "target", player.getName());
+            MessageUtils.send(senderPlayer, plugin, "tpa_accepted_sender",
+                    "target", player.getName(), "radius", radiusText);
 
             long attemptId = java.util.concurrent.ThreadLocalRandom.current().nextLong();
             senderPlayer.getPersistentDataContainer().set(lockKey, PersistentDataType.BYTE, (byte) 1);
             senderPlayer.getPersistentDataContainer().set(teleportPendingKey, PersistentDataType.LONG, attemptId);
 
-            findSafeLocation(player.getLocation()).whenComplete((destination, searchError) -> {
+            findSafeLocation(player.getLocation(), safeRadius).whenComplete((destination, searchError) -> {
                 Long currentAttempt = senderPlayer.getPersistentDataContainer()
                         .get(teleportPendingKey, PersistentDataType.LONG);
                 if (currentAttempt == null || currentAttempt != attemptId) return;
@@ -158,7 +159,8 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
 
                     senderPlayer.getPersistentDataContainer().remove(teleportPendingKey);
                     if (error == null && Boolean.TRUE.equals(success)) {
-                        MessageUtils.send(senderPlayer, plugin, "tpa_success", "target", player.getName());
+                        MessageUtils.send(senderPlayer, plugin, "tpa_success",
+                                "target", player.getName(), "radius", radiusText);
                     } else {
                         senderPlayer.getPersistentDataContainer().remove(lockKey);
                         MessageUtils.send(senderPlayer, plugin, "tpa_fail");
@@ -215,22 +217,29 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private CompletableFuture<Location> findSafeLocation(Location targetLocation) {
+    private double configuredSafeRadius() {
+        return sanitizeRadius(plugin.getConfig().getDouble(
+                "tpa-safe-radius", DEFAULT_TPA_RADIUS));
+    }
+
+    private CompletableFuture<Location> findSafeLocation(Location targetLocation, double safeRadius) {
         if (targetLocation == null || targetLocation.getWorld() == null) {
             return CompletableFuture.completedFuture(null);
         }
 
-        List<Location> candidates = candidateLocations(targetLocation);
-        return findSafeCandidate(targetLocation.getWorld(), targetLocation, candidates, 0);
+        List<Location> candidates = candidateLocations(targetLocation, safeRadius);
+        return findSafeCandidate(targetLocation.getWorld(), targetLocation,
+                safeRadius, candidates, 0);
     }
 
     private CompletableFuture<Location> findSafeCandidate(
-            World world, Location targetLocation, List<Location> candidates, int index) {
+            World world, Location targetLocation, double safeRadius,
+            List<Location> candidates, int index) {
         if (index >= candidates.size()) return CompletableFuture.completedFuture(null);
 
         Location candidate = candidates.get(index);
         if (!world.getWorldBorder().isInside(candidate)) {
-            return findSafeCandidate(world, targetLocation, candidates, index + 1);
+            return findSafeCandidate(world, targetLocation, safeRadius, candidates, index + 1);
         }
 
         int chunkX = candidate.getBlockX() >> 4;
@@ -239,15 +248,18 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
                 .handle((chunk, error) -> error == null ? chunk : null)
                 .thenCompose(chunk -> {
                     if (chunk != null) {
-                        Location safe = findSafeStandingLocation(world, targetLocation, chunk, candidate);
+                        Location safe = findSafeStandingLocation(
+                                world, targetLocation, safeRadius, chunk, candidate);
                         if (safe != null) return CompletableFuture.completedFuture(safe);
                     }
-                    return findSafeCandidate(world, targetLocation, candidates, index + 1);
+                    return findSafeCandidate(
+                            world, targetLocation, safeRadius, candidates, index + 1);
                 });
     }
 
     private Location findSafeStandingLocation(
-            World world, Location targetLocation, Chunk chunk, Location candidate) {
+            World world, Location targetLocation, double safeRadius,
+            Chunk chunk, Location candidate) {
         int localX = Math.floorMod(candidate.getBlockX(), 16);
         int localZ = Math.floorMod(candidate.getBlockZ(), 16);
         int highestY = world.getMaxHeight() - 2;
@@ -267,7 +279,7 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
                     candidate.getBlockZ() + 0.5, candidate.getYaw(), candidate.getPitch());
             double deltaX = safe.getX() - targetLocation.getX();
             double deltaZ = safe.getZ() - targetLocation.getZ();
-            if (deltaX * deltaX + deltaZ * deltaZ < MIN_TPA_DISTANCE * MIN_TPA_DISTANCE) continue;
+            if (deltaX * deltaX + deltaZ * deltaZ < safeRadius * safeRadius) continue;
             return safe;
         }
         return null;
@@ -283,17 +295,45 @@ public class TPAExecutor implements CommandExecutor, TabCompleter {
         };
     }
 
-    static List<Location> candidateLocations(Location targetLocation) {
+    static double sanitizeRadius(double configuredRadius) {
+        if (!Double.isFinite(configuredRadius)) return DEFAULT_TPA_RADIUS;
+        return Math.max(MIN_TPA_RADIUS, Math.min(MAX_TPA_RADIUS, configuredRadius));
+    }
+
+    static String formatRadius(double radius) {
+        return BigDecimal.valueOf(sanitizeRadius(radius)).stripTrailingZeros().toPlainString();
+    }
+
+    static List<HorizontalOffset> candidateOffsets(double configuredRadius) {
+        double safeRadius = sanitizeRadius(configuredRadius);
+        List<HorizontalOffset> offsets = new ArrayList<>(
+                CANDIDATES_PER_RING * CANDIDATE_RING_MARGINS.length);
+        for (double margin : CANDIDATE_RING_MARGINS) {
+            double candidateRadius = safeRadius + margin;
+            for (int index = 0; index < CANDIDATES_PER_RING; index++) {
+                double angle = (Math.PI * 2.0 * index) / CANDIDATES_PER_RING;
+                offsets.add(new HorizontalOffset(
+                        Math.cos(angle) * candidateRadius,
+                        Math.sin(angle) * candidateRadius));
+            }
+        }
+        return List.copyOf(offsets);
+    }
+
+    static List<Location> candidateLocations(Location targetLocation, double safeRadius) {
         if (targetLocation == null || targetLocation.getWorld() == null) return List.of();
-        return Arrays.stream(SAFE_OFFSETS)
+        return candidateOffsets(safeRadius).stream()
                 .map(offset -> new Location(
                         targetLocation.getWorld(),
-                        targetLocation.getX() + offset[0],
+                        targetLocation.getX() + offset.x(),
                         targetLocation.getY(),
-                        targetLocation.getZ() + offset[1],
+                        targetLocation.getZ() + offset.z(),
                         targetLocation.getYaw(),
                         targetLocation.getPitch()))
                 .toList();
+    }
+
+    record HorizontalOffset(double x, double z) {
     }
 
     @Nullable

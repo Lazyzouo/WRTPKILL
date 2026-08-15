@@ -8,15 +8,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public final class LanguageManager {
     public static final String DEFAULT_LANGUAGE = "zh_CN";
     private static final String ENGLISH_LANGUAGE = "en_US";
-    private static final Map<String, String> LEGACY_ENGLISH_PANELS = Map.of(
-            "merged_offline_notice", "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&e * &e&lOffline cleanup and access update &e*\n  &8- &7Reason: &cOffline duration exceeded\n  &8- &7Penalty: &cInventory and Ender Chest cleared; returned to spawn\n  &8- &7Benefit: &aRTP and TPA restrictions were removed\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━",
-            "unlock_death_merged", "&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n           &c☠ &c&lYou died and respawned at spawn &c☠\n  &8- &7Your RTP and TPA restrictions were removed.\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"
+    private static final Map<String, List<String>> LEGACY_ENGLISH_MESSAGES = Map.of(
+            "merged_offline_notice", List.of("&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n&e * &e&lOffline cleanup and access update &e*\n  &8- &7Reason: &cOffline duration exceeded\n  &8- &7Penalty: &cInventory and Ender Chest cleared; returned to spawn\n  &8- &7Benefit: &aRTP and TPA restrictions were removed\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"),
+            "unlock_death_merged", List.of("&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━\n           &c☠ &c&lYou died and respawned at spawn &c☠\n  &8- &7Your RTP and TPA restrictions were removed.\n&b━━━━━━&3━━━━━━&9━━━━━━ &e✧ &9━━━━━━&3━━━━━━&b━━━━━━"),
+            "tpa_success", List.of(
+                    "&8[&aOK&8] &aTeleported to &e{target}&a.",
+                    "&8[&aOK&8] &aTeleported to a safe point at least 32 blocks from &e{target}&a."),
+            "tpa_accepted_sender", List.of(
+                    "&8[&aOK&8] &e{target} &aaccepted your request. Teleporting...")
     );
     private static final String ENGLISH_RESOURCE = "lang/" + ENGLISH_LANGUAGE + ".yml";
 
@@ -37,7 +43,7 @@ public final class LanguageManager {
         if (ENGLISH_LANGUAGE.equals(language)) {
             selectedMessages = YamlConfiguration.loadConfiguration(
                     new File(plugin.getDataFolder(), "lang/" + ENGLISH_LANGUAGE + ".yml"));
-            applyBundledEnglishPanelMigrations();
+            applyBundledEnglishMigrations();
         } else {
             selectedMessages = plugin.getConfig();
         }
@@ -62,22 +68,22 @@ public final class LanguageManager {
         return ENGLISH_LANGUAGE.equals(language);
     }
 
-    private void applyBundledEnglishPanelMigrations() {
+    private void applyBundledEnglishMigrations() {
         InputStream resource = plugin.getResource(ENGLISH_RESOURCE);
         if (resource == null) return;
 
         try (resource;
              InputStreamReader reader = new InputStreamReader(resource, StandardCharsets.UTF_8)) {
             FileConfiguration bundledMessages = YamlConfiguration.loadConfiguration(reader);
-            for (Map.Entry<String, String> entry : LEGACY_ENGLISH_PANELS.entrySet()) {
+            for (Map.Entry<String, List<String>> entry : LEGACY_ENGLISH_MESSAGES.entrySet()) {
                 String path = "messages." + entry.getKey();
-                if (!entry.getValue().equals(selectedMessages.getString(path))) continue;
+                if (!entry.getValue().contains(selectedMessages.getString(path))) continue;
 
                 Object replacement = bundledMessages.get(path);
                 if (replacement != null) selectedMessages.set(path, replacement);
             }
         } catch (IOException exception) {
-            plugin.logConsole("&eCould not load bundled English panel layouts: "
+            plugin.logConsole("&eCould not load bundled English message migrations: "
                     + exception.getMessage());
         }
     }

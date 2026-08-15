@@ -15,15 +15,11 @@ final class ConfigTreeMerger {
 
     static Map<String, Object> merge(
             Map<String, Object> officialDefaults,
-            Map<String, Object> userConfig,
-            Map<String, Object> previousOfficialDefaults) {
-        if (previousOfficialDefaults == null) {
-            return bootstrapMerge(officialDefaults, userConfig, true);
-        }
-        return mergeWithBaseline(officialDefaults, userConfig, previousOfficialDefaults);
+            Map<String, Object> userConfig) {
+        return mergeMissingDefaults(officialDefaults, userConfig, true);
     }
 
-    private static Map<String, Object> bootstrapMerge(
+    private static Map<String, Object> mergeMissingDefaults(
             Map<String, Object> officialDefaults,
             Map<String, Object> userConfig,
             boolean root) {
@@ -44,44 +40,9 @@ final class ConfigTreeMerger {
             Object defaultValue = officialDefaults.get(key);
             if (hasDefaultValue && userValue instanceof Map<?, ?> userMap
                     && defaultValue instanceof Map<?, ?> defaultMap) {
-                result.put(key, bootstrapMerge(
+                result.put(key, mergeMissingDefaults(
                         asStringMap(defaultMap), asStringMap(userMap), false));
             } else {
-                result.put(key, deepCopy(userValue));
-            }
-        }
-        return result;
-    }
-
-    private static Map<String, Object> mergeWithBaseline(
-            Map<String, Object> officialDefaults,
-            Map<String, Object> userConfig,
-            Map<String, Object> previousOfficialDefaults) {
-        Map<String, Object> result = new LinkedHashMap<>();
-        for (String key : orderedKeys(officialDefaults, userConfig, previousOfficialDefaults)) {
-            boolean hasUserValue = userConfig.containsKey(key);
-            boolean hasNewDefault = officialDefaults.containsKey(key);
-            boolean hadOldDefault = previousOfficialDefaults.containsKey(key);
-
-            if (!hasUserValue) {
-                if (!hadOldDefault && hasNewDefault) {
-                    result.put(key, deepCopy(officialDefaults.get(key)));
-                }
-                continue;
-            }
-
-            Object userValue = userConfig.get(key);
-            Object newDefault = officialDefaults.get(key);
-            Object oldDefault = previousOfficialDefaults.get(key);
-            if (hasNewDefault && userValue instanceof Map<?, ?> userMap
-                    && newDefault instanceof Map<?, ?> newDefaultMap) {
-                Map<String, Object> oldDefaultMap = oldDefault instanceof Map<?, ?> map
-                        ? asStringMap(map)
-                        : Map.of();
-                result.put(key, mergeWithBaseline(
-                        asStringMap(newDefaultMap), asStringMap(userMap), oldDefaultMap));
-            } else {
-                // Existing user values always win, including values equal to old defaults.
                 result.put(key, deepCopy(userValue));
             }
         }

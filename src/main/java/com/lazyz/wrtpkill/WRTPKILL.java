@@ -72,6 +72,10 @@ public class WRTPKILL extends JavaPlugin {
             logConsole("&7Configuration backup: &f"
                     + configurationUpdate.backupPath().getFileName());
         }
+        if (configurationUpdate != null && configurationUpdate.legacyBaselineRemoved()) {
+            logConsole("&aRemoved legacy default baseline; config.yml is now the only active configuration. "
+                    + "&8/ &a已移除旧默认值基线，当前仅使用 config.yml。");
+        }
         Bukkit.getAsyncScheduler().runNow(this, task -> new UpdateChecker(this).checkForUpdates());
     }
 

@@ -22,10 +22,17 @@ import java.util.Locale;
 import java.util.Map;
 
 final class ConfigurationUpdater {
-    static final String BASELINE_FILE_NAME = ".wrtpkill-default-config.yml";
+    static final String LEGACY_BASELINE_FILE_NAME = ".wrtpkill-default-config.yml";
     static final String CONFIG_VERSION_PATH = "config-version";
-    static final int CURRENT_CONFIG_VERSION = 1;
+    static final int CURRENT_CONFIG_VERSION = 2;
     private static final String CONFIG_RESOURCE = "config.yml";
+    private static final Map<String, List<String>> V2_OFFICIAL_MESSAGE_MIGRATIONS = Map.of(
+            "messages.tpa_success", List.of(
+                    "&8[&a✔&8] &a成功传送到 &e{target} &a身边！",
+                    "&8[&a✔&8] &a已传送至距离 &e{target} &a至少 32 格的安全位置！"),
+            "messages.tpa_accepted_sender", List.of(
+                    "&8[&a✔&8] &e{target} &a已接受请求，正在为你传送...")
+    );
     private static final DateTimeFormatter BACKUP_TIMESTAMP =
             DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss-SSS", Locale.ROOT);
 
@@ -35,13 +42,13 @@ final class ConfigurationUpdater {
     static Result update(JavaPlugin plugin) throws IOException {
         Path dataDirectory = plugin.getDataFolder().toPath();
         Path configFile = dataDirectory.resolve(CONFIG_RESOURCE);
-        Path baselineFile = dataDirectory.resolve(BASELINE_FILE_NAME);
         String officialText = readOfficialConfig(plugin);
-        return update(configFile, baselineFile, officialText);
+        Result result = update(configFile, officialText);
+        boolean legacyBaselineRemoved = removeLegacyBaseline(dataDirectory);
+        return new Result(result.configRewritten(), result.backupPath(), legacyBaselineRemoved);
     }
 
-    static Result update(Path configFile, Path baselineFile, String officialText)
-            throws IOException {
+    static Result update(Path configFile, String officialText) throws IOException {
         String userText = Files.readString(configFile, StandardCharsets.UTF_8);
 
         YamlConfiguration officialConfig = loadYaml(officialText, "bundled config.yml");
@@ -57,30 +64,19 @@ final class ConfigurationUpdater {
                     + "; this plugin supports up to v" + bundledConfigVersion
                     + ". Refusing to downgrade it.");
         }
-        Map<String, Object> previousDefaults = null;
-        String baselineText = null;
-        if (Files.isRegularFile(baselineFile)) {
-            baselineText = Files.readString(baselineFile, StandardCharsets.UTF_8);
-            try {
-                previousDefaults = toMap(loadYaml(baselineText, baselineFile.toString()));
-            } catch (IOException ignored) {
-                // A damaged internal baseline is safely rebuilt from the bundled defaults.
-                baselineText = null;
-            }
+        if (userConfigVersion < 2 && bundledConfigVersion >= 2) {
+            migrateV2OfficialMessages(userConfig, officialConfig);
         }
 
         Map<String, Object> userValues = toMap(userConfig);
         Map<String, Object> officialValues = toMap(officialConfig);
-        Map<String, Object> mergedValues = ConfigTreeMerger.merge(
-                officialValues, userValues, previousDefaults);
+        Map<String, Object> mergedValues = ConfigTreeMerger.merge(officialValues, userValues);
         if (bundledConfigVersion > 0) {
             // Schema metadata is owned by the plugin, while all functional values remain user-owned.
             mergedValues.put(CONFIG_VERSION_PATH, bundledConfigVersion);
         }
-        boolean defaultsChanged = baselineText == null || !officialText.equals(baselineText);
         boolean valuesChanged = !mergedValues.equals(userValues);
-        boolean exactFreshConfig = baselineText == null && officialText.equals(userText);
-        boolean rewriteConfig = valuesChanged || (defaultsChanged && !exactFreshConfig);
+        boolean rewriteConfig = valuesChanged;
         Path backupPath = null;
 
         if (rewriteConfig) {
@@ -89,9 +85,12 @@ final class ConfigurationUpdater {
             copyUserComments(userConfig, officialConfig);
             writeAtomically(configFile, officialConfig.saveToString());
         }
-        if (defaultsChanged) writeAtomically(baselineFile, officialText);
 
-        return new Result(rewriteConfig, defaultsChanged, backupPath);
+        return new Result(rewriteConfig, backupPath, false);
+    }
+
+    static boolean removeLegacyBaseline(Path dataDirectory) throws IOException {
+        return Files.deleteIfExists(dataDirectory.resolve(LEGACY_BASELINE_FILE_NAME));
     }
 
     private static String readOfficialConfig(JavaPlugin plugin) throws IOException {
@@ -139,6 +138,18 @@ final class ConfigurationUpdater {
             return result;
         }
         return value;
+    }
+
+    private static void migrateV2OfficialMessages(
+            YamlConfiguration userConfig, YamlConfiguration officialConfig) {
+        for (Map.Entry<String, List<String>> migration : V2_OFFICIAL_MESSAGE_MIGRATIONS.entrySet()) {
+            String path = migration.getKey();
+            String current = userConfig.getString(path);
+            if (current == null || !migration.getValue().contains(current)) continue;
+
+            Object replacement = officialConfig.get(path);
+            if (replacement != null) userConfig.set(path, replacement);
+        }
     }
 
     private static int readConfigVersion(ConfigurationSection config, String source) throws IOException {
@@ -246,6 +257,6 @@ final class ConfigurationUpdater {
         }
     }
 
-    record Result(boolean configRewritten, boolean baselineUpdated, Path backupPath) {
+    record Result(boolean configRewritten, Path backupPath, boolean legacyBaselineRemoved) {
     }
 }

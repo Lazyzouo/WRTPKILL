@@ -21,7 +21,7 @@ class ConfigTreeMergerTest {
                 "updater", mapOf("enabled", false),
                 "custom-value", 27);
 
-        Map<String, Object> merged = ConfigTreeMerger.merge(defaults, user, null);
+        Map<String, Object> merged = ConfigTreeMerger.merge(defaults, user);
 
         assertEquals("en_US", merged.get("language"));
         assertEquals(27, merged.get("custom-value"));
@@ -29,12 +29,7 @@ class ConfigTreeMergerTest {
     }
 
     @Test
-    void laterUpdatesPreserveValuesDeletionsAndCustomWorlds() {
-        Map<String, Object> oldDefaults = mapOf(
-                "language", "zh_CN",
-                "worlds", mapOf(
-                        "nether", mapOf("world-name", "world_nether", "max-x", 200),
-                        "overworld", mapOf("world-name", "world")));
+    void laterUpdatesRestoreMissingDefaultsButPreserveCustomWorlds() {
         Map<String, Object> newDefaults = mapOf(
                 "language", "en_US",
                 "worlds", mapOf(
@@ -49,7 +44,7 @@ class ConfigTreeMergerTest {
                         "nether", mapOf("world-name", "training_nether", "max-x", 200),
                         "arena", mapOf("world-name", "practice", "max-x", 80)));
 
-        Map<String, Object> merged = ConfigTreeMerger.merge(newDefaults, user, oldDefaults);
+        Map<String, Object> merged = ConfigTreeMerger.merge(newDefaults, user);
         @SuppressWarnings("unchecked")
         Map<String, Object> worlds = (Map<String, Object>) merged.get("worlds");
 
@@ -57,17 +52,17 @@ class ConfigTreeMergerTest {
         assertTrue(merged.containsKey("new-feature"));
         assertTrue(worlds.containsKey("nether"));
         assertTrue(worlds.containsKey("arena"));
-        assertTrue(worlds.containsKey("end"));
+        assertFalse(worlds.containsKey("end"));
         assertFalse(worlds.containsKey("overworld"));
-        assertEquals(mapOf("world-name", "training_nether", "max-x", 200,
-                "use-border", false), worlds.get("nether"));
+        assertEquals(mapOf("world-name", "training_nether", "max-x", 200),
+                worlds.get("nether"));
     }
 
     @Test
     void userListsAndEmptySectionsRemainIndependentCopies() {
         List<String> whitelist = new java.util.ArrayList<>(List.of("PlayerOne"));
         Map<String, Object> user = mapOf("whitelist", whitelist, "worlds", Map.of());
-        Map<String, Object> merged = ConfigTreeMerger.merge(user, user, user);
+        Map<String, Object> merged = ConfigTreeMerger.merge(user, user);
 
         whitelist.add("PlayerTwo");
 

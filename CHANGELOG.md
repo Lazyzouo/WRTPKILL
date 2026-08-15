@@ -4,6 +4,40 @@ All notable changes are recorded here. English is listed before Chinese.
 
 所有重要变更均记录于此，英文内容排列在中文内容之前。
 
+## [1.4.1] - 2026-08-16
+
+### English
+
+#### Changed
+
+- Added the configurable `tpa-safe-radius` setting with a supported range of 1-1024 blocks; `/wrtp reload` applies the new value without a restart.
+- Synchronized `/tpaccept` placement and localized acceptance/success messages through the `{radius}` placeholder.
+- Advanced the configuration schema to version 2 while preserving existing settings, custom keys, and the complete user-owned `worlds` section.
+
+#### Removed
+
+- Stopped creating or reading `.wrtpkill-default-config.yml`; WRTPKILL now maintains only `config.yml` and removes the obsolete hidden file after a successful upgrade.
+
+#### Documentation
+
+- Updated the administrator guide, README, release notice, configuration comments, and compatibility labels for `1.4.1`.
+
+### 中文
+
+#### 调整
+
+- 新增可配置的 `tpa-safe-radius`，支持 1-1024 格；修改后可通过 `/wrtp reload` 生效，无需重启服务器。
+- `/tpaccept` 的安全落点与接受/成功消息统一使用 `{radius}` 变量，确保提示数字与实际生效半径一致。
+- 配置 schema 升级至版本 2，同时保留现有参数、自定义节点以及完整的用户 `worlds` 区段。
+
+#### 移除
+
+- 停止创建或读取 `.wrtpkill-default-config.yml`；WRTPKILL 现在只维护 `config.yml`，并在成功升级后删除旧隐藏文件。
+
+#### 文档
+
+- 更新 `1.4.1` 的管理员说明、README、发布声明、配置注释及兼容性标记。
+
 ## [1.4.0] - 2026-08-15
 
 ### English
@@ -328,6 +362,8 @@ All notable changes are recorded here. English is listed before Chinese.
 - 死亡、指令击杀、虚空死亡、复活与延迟重上线提示通过持久标记可靠恢复。
 - 帮助、死亡、复活和离线重上线面板保持无前缀，普通指令反馈使用 `[WRTP]`。
 
+[1.4.1]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.4.1
+[1.4.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.4.0
 [1.3.0]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.3.0
 [1.2.6]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.6
 [1.2.5]: https://github.com/Lazyzouo/WRTPKILL/releases/tag/v1.2.5
